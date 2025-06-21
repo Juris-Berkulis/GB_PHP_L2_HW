@@ -6,16 +6,16 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\InMemoryUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 
-//spl_autoload_register('load');
+spl_autoload_register('load');
 
-include __DIR__ . "/vendor/autoload.php";
+//include __DIR__ . "/vendor/autoload.php";
 
 function load($className)
 {
-//приходит GeekBrains\Person\Name
     $file = $className . ".php"; // Person/Name.php
+    $file = str_replace("JurisBerkulis\\GbPhpL2Hw", "src", $file);
+    $file = str_replace("_", "/", $file);
     $file = str_replace("\\", "/", $file);
-    //нужно src/Person/Name.php
     if (file_exists($file)) {
         include $file;
     }
