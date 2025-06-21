@@ -1,9 +1,9 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog\Repositories;
+namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories;
 
-use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
-use GeekBrains\LevelTwo\Blog\User;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\User;
 
 class InMemoryUsersRepository
 {

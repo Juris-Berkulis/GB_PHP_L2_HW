@@ -1,8 +1,8 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Blog;
+namespace JurisBerkulis\GbPhpL2Hw\Blog;
 
-use GeekBrains\LevelTwo\Person\Person;
+use JurisBerkulis\GbPhpL2Hw\Person\Person;
 
 class Post
 {

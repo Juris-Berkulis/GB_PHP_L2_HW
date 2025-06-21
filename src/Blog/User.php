@@ -1,7 +1,7 @@
 <?php
-namespace GeekBrains\LevelTwo\Blog;
+namespace JurisBerkulis\GbPhpL2Hw\Blog;
 
-use GeekBrains\LevelTwo\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\Person\Name;
 
 class User
 {

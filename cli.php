@@ -1,10 +1,10 @@
 <?php
 
-use GeekBrains\LevelTwo\Blog\User;
-use GeekBrains\LevelTwo\Person\{Name, Person};
-use GeekBrains\LevelTwo\Blog\Post;
-use GeekBrains\LevelTwo\Blog\Repositories\InMemoryUsersRepository;
-use GeekBrains\LevelTwo\Blog\Exceptions\UserNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\User;
+use JurisBerkulis\GbPhpL2Hw\Person\{Name, Person};
+use JurisBerkulis\GbPhpL2Hw\Blog\Post;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\InMemoryUsersRepository;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 
 //spl_autoload_register('load');
 

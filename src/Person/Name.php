@@ -1,6 +1,6 @@
 <?php
 
-namespace GeekBrains\LevelTwo\Person;
+namespace JurisBerkulis\GbPhpL2Hw\Person;
 
 class Name
 {
