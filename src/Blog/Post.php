@@ -17,8 +17,8 @@ class Post
     )
     {
         $this->id = $id;
-        $this->text = $text;
         $this->author = $author;
+        $this->text = $text;
     }
 
     public function __toString()

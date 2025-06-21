@@ -24,11 +24,12 @@ class InMemoryUsersRepository
     public function get(int $id): User
     {
         foreach ($this->users as $user) {
-            if ($user->id() === $id) {
+            if ($user->getId() === $id) {
                 return $user;
             }
         }
-        throw new UserNotFoundException("User not found: $id");
+
+        throw new UserNotFoundException("Пользователь с id='$id' не найден");
     }
 
 }

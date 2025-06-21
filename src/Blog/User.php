@@ -30,7 +30,7 @@ class User
     /**
      * @return int
      */
-    public function id(): int
+    public function getId(): int
     {
         return $this->id;
     }
