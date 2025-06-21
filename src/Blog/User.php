@@ -5,6 +5,7 @@ use JurisBerkulis\GbPhpL2Hw\Person\Name;
 
 class User
 {
+
     private int $id;
     private Name $username;
     private string $login;
@@ -23,9 +24,8 @@ class User
 
     public function __toString(): string
     {
-        return "Юзер $this->id с именем $this->username и логином $this->login." . PHP_EOL;
+        return "Юзер $this->id с именем $this->username и логином $this->login";
     }
-
 
     /**
      * @return int

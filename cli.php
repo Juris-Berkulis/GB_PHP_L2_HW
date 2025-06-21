@@ -1,10 +1,15 @@
 <?php
 
+// Использование: Запустить в терминале команды
+// - php cli.php user
+// - php cli.php post
+// - php cli.php comment
+// - php cli.php test (или любой другой параметр, либо без параметра)
+
+use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
-use JurisBerkulis\GbPhpL2Hw\Person\{Name, Person};
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\InMemoryUsersRepository;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 
 include __DIR__ . "/vendor/autoload.php";
 
@@ -27,38 +32,43 @@ include __DIR__ . "/vendor/autoload.php";
 //
 //spl_autoload_register('load');
 
-var_dump($argv);
+$faker = Faker\Factory::create('ru_RU');
 
-//$faker = Faker\Factory::create('ru_RU');
-
-//echo $faker->name() . PHP_EOL;
-//echo $faker->realText(rand(100, 200)) . PHP_EOL;
-
-$name = new Name('Peter', 'Sidorov');
-$user = new User(1, $name, "Admin");
-
-$person = new Person($name, new DateTimeImmutable());
+$name = new Name($faker->firstName('male'), $faker->lastName('male'));
+$user = new User($faker->randomDigitNotNull(), $name, $faker->email());
 
 $post = new Post(
-    1,
-    $person,
-    'Всем привет!'
+    $faker->randomDigitNotNull(),
+    $user,
+    $faker->text(15),
+    $faker->text(150),
 );
 
-echo $post;
+$route = $argv[1] ?? null;
 
-$name2 = new Name('Иван', 'Таранов');
-$user2 = new User(2, $name2, "User");
+switch ($route) {
+    case "user": {
+        echo $user;
 
-$userRepository = new InMemoryUsersRepository();
+        break;
+    }
+    case "post": {
+        echo $post;
 
-try {
-    $userRepository->save($user);
-    $userRepository->save($user2);
+        break;
+    }
+    case "comment": {
+        $comment = new Comment(
+            $faker->randomDigitNotNull(),
+            $user,
+            $post,
+            $faker->text(50),
+        );
 
-    echo $userRepository->get(1);
-    echo $userRepository->get(2);
-    echo $userRepository->get(3);
-} catch (UserNotFoundException | Exception $e) {
-    echo $e->getMessage();
+        echo $comment;
+
+        break;
+    }
+    default:
+        echo "Неизвестная комманда!\n";
 }
