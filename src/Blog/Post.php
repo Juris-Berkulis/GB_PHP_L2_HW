@@ -10,13 +10,13 @@ class Post
     private string $text;
 
     public function __construct(
-        UUID   $id,
+        UUID   $uuid,
         User   $user,
         string $title,
         string $text
     )
     {
-        $this->uuid = $id;
+        $this->uuid = $uuid;
         $this->user = $user;
         $this->title = $title;
         $this->text = $text;

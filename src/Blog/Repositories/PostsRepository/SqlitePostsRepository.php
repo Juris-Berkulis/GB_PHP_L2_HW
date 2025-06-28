@@ -56,7 +56,7 @@ class SqlitePostsRepository implements PostsRepositoryInterface
             );
         }
 
-        // Создаём объект Статьи
+        // Создаём объект статьи
         return new Post(
             new UUID($result['uuid']),
             $this->usersRepository->get(new UUID($result['user_uuid'])),

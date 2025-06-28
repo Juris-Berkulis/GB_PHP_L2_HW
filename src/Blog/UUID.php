@@ -18,7 +18,7 @@ class UUID
         // был создан, то он точно содержит правильный UUID
         if (!uuid_is_valid($uuidString)) {
             throw new InvalidArgumentException(
-                "Malformed UUID: $this->uuidString"
+                "Неправильно сформированный UUID: $this->uuidString"
             );
         }
     }
