@@ -8,6 +8,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use PDO;
+use PDOStatement;
 
 class SqliteUsersRepository implements UserRepositoryInterface
 {
@@ -38,28 +39,57 @@ class SqliteUsersRepository implements UserRepositoryInterface
      * @throws InvalidArgumentException
      * @throws UserNotFoundException
      */
-    public function get(UUID $uuid): User
+    private function getUser(PDOStatement $statement, string $uniqueField): User
     {
-        $statement = $this->connection->prepare(
-            'SELECT * FROM users WHERE uuid = ?'
-        );
-
-        $statement->execute([ (string)$uuid ]);
-
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        // Бросаем исключение, если пользователь не найден
         if ($result === false) {
             throw new UserNotFoundException(
-                "Cannot get user: $uuid"
+                "Пользователь не найден: $uniqueField"
             );
         }
 
+        // Создаём объект пользователя с полем username
         return new User(
             new UUID($result['uuid']),
             new Name($result['first_name'], $result['last_name']),
-            'guest'
+            $result['username'],
         );
     }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws UserNotFoundException
+     */
+    public function get(UUID $uuid): User
+    {
+        $statement = $this->connection->prepare(
+            'SELECT * FROM users WHERE uuid = :uuid'
+        );
+
+        $statement->execute([
+            ':uuid' => (string)$uuid,
+        ]);
+
+        return $this->getUser($statement, $uuid);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws UserNotFoundException
+     */
+    public function getByUsername(string $username): User
+    {
+        $statement = $this->connection->prepare(
+            'SELECT * FROM users WHERE username = :username'
+        );
+
+        $statement->execute([
+            ':username' => $username,
+        ]);
+
+        return $this->getUser($statement, $username);
+    }
+
 
 }

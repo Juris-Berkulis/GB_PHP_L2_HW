@@ -31,4 +31,18 @@ class InMemoryUsersRepository implements UserRepositoryInterface
         throw new UserNotFoundException("Пользователь с id='$uuid' не найден");
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
+    public function getByUsername(string $username): User
+    {
+        foreach ($this->users as $user) {
+            if ($user->username() === $username) {
+                return $user;
+            }
+        }
+
+        throw new UserNotFoundException("Пользователь не найден: $username");
+    }
+
 }

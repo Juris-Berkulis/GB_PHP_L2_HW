@@ -22,4 +22,10 @@ interface UserRepositoryInterface
      */
     public function get(UUID $uuid): User;
 
+    /*
+     * Получение пользователя по его логину
+     */
+    public function getByUsername(string $username): User;
+
+
 }

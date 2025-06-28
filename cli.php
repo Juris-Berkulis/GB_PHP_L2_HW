@@ -19,8 +19,11 @@ try {
 //    //Добавляем в репозиторий несколько пользователей
 //    $usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), 'admin'));
 
-    //Извлекаем пользователя по uuid
-    echo $usersRepository->get(new UUID('67e8fc70-b1da-44d6-a61e-edbe8e24155d'));
+//    //Извлекаем пользователя по uuid
+//    echo $usersRepository->get(new UUID('67e8fc70-b1da-44d6-a61e-edbe8e24155d'));
+
+    //Извлекаем пользователя по логину
+    echo $usersRepository->getByUsername('admin');
 } catch (InvalidArgumentException $e) {
     echo 'Ошибка типа InvalidArgumentException: ', $e->getMessage();
 } catch (UserNotFoundException $e) {
