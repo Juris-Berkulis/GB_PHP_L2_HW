@@ -23,7 +23,6 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
             'INSERT INTO users (uuid, username, first_name, last_name) VALUES (:uuid, :username, :first_name, :last_name)'
-
         );
 
         // Выполняем запрос с конкретными значениями
@@ -49,7 +48,7 @@ class SqliteUsersRepository implements UsersRepositoryInterface
             );
         }
 
-        // Создаём объект пользователя с полем username
+        // Создаём объект пользователя
         return new User(
             new UUID($result['uuid']),
             new Name($result['first_name'], $result['last_name']),
