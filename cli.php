@@ -1,12 +1,8 @@
 <?php
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Arguments;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\CreateUserCommand;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
-use JurisBerkulis\GbPhpL2Hw\Blog\User;
-use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
-use JurisBerkulis\GbPhpL2Hw\Person\Name;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -19,7 +15,7 @@ $usersRepository = new SqliteUsersRepository($connection);
 $command = new CreateUserCommand($usersRepository);
 
 try {
-    $command->handle($argv);
+    $command->handle(Arguments::fromArgv($argv));
 } catch (Exception $e) {
     echo 'Ошибка: ', $e->getMessage();
 }
