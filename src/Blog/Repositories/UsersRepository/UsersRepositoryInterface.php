@@ -5,7 +5,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 
-interface UserRepositoryInterface
+interface UsersRepositoryInterface
 {
 
     /**
@@ -26,6 +26,5 @@ interface UserRepositoryInterface
      * Получение пользователя по его логину
      */
     public function getByUsername(string $username): User;
-
 
 }

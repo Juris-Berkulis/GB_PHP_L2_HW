@@ -10,7 +10,7 @@ use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use PDO;
 use PDOStatement;
 
-class SqliteUsersRepository implements UserRepositoryInterface
+class SqliteUsersRepository implements UsersRepositoryInterface
 {
     private PDO $connection;
 

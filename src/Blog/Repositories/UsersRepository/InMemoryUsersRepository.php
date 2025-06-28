@@ -6,7 +6,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 
-class InMemoryUsersRepository implements UserRepositoryInterface
+class InMemoryUsersRepository implements UsersRepositoryInterface
 {
 
     private array $users = [];
