@@ -5,14 +5,14 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog;
 class Comment
 {
 
-    private int $id;
+    private UUID $uuid;
     private User $user;
     private Post $post;
     private string $text;
 
-    public function __construct(int $id, User $user, Post $post, string $text)
+    public function __construct(UUID $uuid, User $user, Post $post, string $text)
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
         $this->user = $user;
         $this->post = $post;
         $this->text = $text;
@@ -20,17 +20,12 @@ class Comment
 
     public function __toString()
     {
-        return "Комментарий от $this->user к статье '{$this->post->getTitle()}': $this->text";
+        return "Комментарий от '$this->user' к статье '{$this->post->getTitle()}': $this->text";
     }
 
-    public function getId(): int
+    public function getUuid(): UUID
     {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
+        return $this->uuid;
     }
 
     public function getUser(): User
