@@ -1,74 +1,30 @@
 <?php
 
-// Использование: Запустить в терминале команды
-// - php cli.php user
-// - php cli.php post
-// - php cli.php comment
-// - php cli.php test (или любой другой параметр, либо без параметра)
-
-use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
-use JurisBerkulis\GbPhpL2Hw\Blog\Post;
-use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
+use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
+use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 
-include __DIR__ . "/vendor/autoload.php";
+require_once __DIR__ . '/vendor/autoload.php';
 
-///**
-// * Кастомная загрузка файлов
-// * @param $className - Название файла (без расширения)
-// * @return void
-// */
-//function load($className)
-//{
-//    $file = $className . ".php";
-//    $file = str_replace("JurisBerkulis\\GbPhpL2Hw", "src", $file);
-//    $file = str_replace("_", "/", $file);
-//    $file = str_replace("\\", "/", $file);
-//
-//    if (file_exists($file)) {
-//        include $file;
-//    }
-//}
-//
-//spl_autoload_register('load');
+//Создаём объект подключения к SQLite
+$connection = new PDO('sqlite:' . __DIR__ . '/blog.sqlite');
 
-$faker = Faker\Factory::create('ru_RU');
+//Создаём объект репозитория
+$usersRepository = new SqliteUsersRepository($connection);
 
-$name = new Name($faker->firstName('male'), $faker->lastName('male'));
-$user = new User($faker->randomDigitNotNull(), $name, $faker->email());
+try {
+//    //Добавляем в репозиторий несколько пользователей
+//    $usersRepository->save(new User(UUID::random(), new Name('Ivan', 'Nikitin'), 'admin'));
 
-$post = new Post(
-    $faker->randomDigitNotNull(),
-    $user,
-    $faker->text(15),
-    $faker->text(150),
-);
-
-$route = $argv[1] ?? null;
-
-switch ($route) {
-    case "user": {
-        echo $user;
-
-        break;
-    }
-    case "post": {
-        echo $post;
-
-        break;
-    }
-    case "comment": {
-        $comment = new Comment(
-            $faker->randomDigitNotNull(),
-            $user,
-            $post,
-            $faker->text(50),
-        );
-
-        echo $comment;
-
-        break;
-    }
-    default:
-        echo "Неизвестная комманда!\n";
+    //Извлекаем пользователя по uuid
+    echo $usersRepository->get(new UUID('67e8fc70-b1da-44d6-a61e-edbe8e24155d'));
+} catch (InvalidArgumentException $e) {
+    echo 'Ошибка типа InvalidArgumentException: ', $e->getMessage();
+} catch (UserNotFoundException $e) {
+    echo 'Ошибка типа UserNotFoundException: ', $e->getMessage();
+} catch (Exception $e) {
+    echo 'Ошибка типа Exception: ', $e->getMessage();
 }
