@@ -6,41 +6,49 @@ use JurisBerkulis\GbPhpL2Hw\Person\Name;
 class User
 {
 
-    private int $id;
-    private Name $username;
-    private string $login;
+    private UUID $uuid;
+    private Name $name;
+    private string $username;
 
     /**
-     * @param int $id
+     * @param UUID $uuid
      * @param Name $username
      * @param string $login
      */
-    public function __construct(int $id, Name $username, string $login)
+    public function __construct(UUID $uuid, Name $username, string $login)
     {
-        $this->id = $id;
-        $this->username = $username;
-        $this->login = $login;
+        $this->uuid = $uuid;
+        $this->name = $username;
+        $this->username = $login;
     }
 
     public function __toString(): string
     {
-        return "Юзер $this->id с именем $this->username и логином $this->login";
+        return "Юзер $this->uuid с именем $this->name и логином $this->username";
     }
 
     /**
-     * @return int
+     * @return UUID
      */
-    public function getId(): int
+    public function getUuid(): UUID
     {
-        return $this->id;
+        return $this->uuid;
     }
 
     /**
-     * @param int $id
+     * @return Name
      */
-    public function setId(int $id): void
+    public function getName(): Name
     {
-        $this->id = $id;
+        return $this->name;
+    }
+
+    /**
+     * @param Name $name
+     */
+    public function setName(Name $name): void
+    {
+        $this->name = $name;
     }
 
     /**
@@ -52,27 +60,11 @@ class User
     }
 
     /**
-     * @param Name $username
+     * @param string $username
      */
-    public function setUsername(Name $username): void
+    public function setUsername(string $username): void
     {
         $this->username = $username;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLogin(): string
-    {
-        return $this->login;
-    }
-
-    /**
-     * @param string $login
-     */
-    public function setLogin(string $login): void
-    {
-        $this->login = $login;
     }
 
 }
