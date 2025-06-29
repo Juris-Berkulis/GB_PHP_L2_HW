@@ -11,6 +11,9 @@
             "email": "krztfjrbhm1@gmail.com"
         }
     ],
+    "scripts": {
+        "test": "phpunit tests --testdox --colors"
+    },
     "require": {
         "fakerphp/faker": "^1.24",
         "ext-pdo": "*",
