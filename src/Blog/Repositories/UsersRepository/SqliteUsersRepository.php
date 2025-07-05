@@ -90,5 +90,4 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         return $this->getUser($statement, $username);
     }
 
-
 }
