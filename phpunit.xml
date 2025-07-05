@@ -22,10 +22,13 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <source>
-        <!-- Директории с исходным кодом для анализа покрытия -->
+    <coverage>
         <include>
             <directory>src</directory>
         </include>
-    </source>
+        <report>
+            <html outputDirectory="coverage_report"/>
+            <clover outputFile="coverage_report.xml"/>
+        </report>
+    </coverage>
 </phpunit>

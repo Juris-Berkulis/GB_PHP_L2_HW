@@ -12,7 +12,10 @@
         }
     ],
     "scripts": {
-        "test": "phpunit tests --testdox --colors"
+        "test": "phpunit tests --testdox --colors",
+        "test-mode-coverage-html": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-html coverage_report --coverage-filter src",
+        "test-mode-coverage-clover": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-clover coverage_report.xml --coverage-filter src",
+        "test-mode-coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-filter src"
     },
     "require": {
         "fakerphp/faker": "^1.24",
