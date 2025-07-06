@@ -2,6 +2,8 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\PostsRepository;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
@@ -85,6 +87,36 @@ class SqlitePostsRepositoryTest extends TestCase
                 'Текст',
             )
         );
+    }
+
+    /**
+     * Тест проверяет, что SQLite-репозиторий бросает исключение, когда запрашиваемая статья не найдена
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
+    public function testItThrowsAnExceptionWhenPostNotFound(): void
+    {
+        // Создаём стаб подключения
+        $connectionStub = $this->createStub(PDO::class);
+
+        // Создаём стаб запроса
+        $statementStub = $this->createStub(PDOStatement::class);
+
+        // Стаб запроса будет возвращать false при вызове метода fetch
+        $statementStub->method('fetch')->willReturn(false);
+
+        // Стаб подключения будет возвращать другой стаб (стаб запроса) при вызове метода prepare
+        $connectionStub->method('prepare')->willReturn($statementStub);
+
+        // Передаём в репозиторий стаб подключения
+        $repository = new SqlitePostsRepository($connectionStub, $this->makeUsersRepository());
+
+        // Ожидаем, что будет брошено исключение
+        $this->expectException(PostNotFoundException::class);
+        $this->expectExceptionMessage('Статья не найдена: 123e4567-e89b-12d3-a456-426614174000');
+
+        // Вызываем метод получения пользователя
+        $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174000'));
     }
 
 }
