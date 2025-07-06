@@ -31,7 +31,11 @@ class SqlitePostsRepositoryTest extends TestCase
 
             public function get(UUID $uuid): User
             {
-                throw new UserNotFoundException("Not found");
+                return new User(
+                    new UUID('123e4567-e89b-12d3-a456-426614174001'),
+                    new Name('Ivan', 'Petrov'),
+                    'Ivan123',
+                );
             }
 
             public function getByUsername(string $username): User
@@ -117,6 +121,38 @@ class SqlitePostsRepositoryTest extends TestCase
 
         // Вызываем метод получения пользователя
         $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174000'));
+    }
+
+    /**
+     * Тест проверяет, что SQLite-репозиторий возвращает статью, когда запрашиваемая статья найдена по её uuid
+     * @throws Exception
+     */
+    public function testItGetPostByUuidWhenPostFound(): void
+    {
+        // Создаём стаб подключения
+        $connectionStub = $this->createStub(PDO::class);
+
+        // Создаём стаб запроса
+        $statementStub = $this->createStub(PDOStatement::class);
+
+        // Стаб запроса будет возвращать объект статьи из БД при вызове метода fetch
+        $statementStub->method('fetch')->willReturn([
+            'uuid' => '123e4567-e89b-12d3-a456-426614174000',
+            'user_uuid' => '123e4567-e89b-12d3-a456-426614174001',
+            'title' => 'Заголовок',
+            'text' => 'Текст',
+        ]);
+
+        // Стаб подключения будет возвращать другой стаб (стаб запроса) при вызове метода prepare
+        $connectionStub->method('prepare')->willReturn($statementStub);
+
+        // Передаём в репозиторий стаб подключения
+        $repository = new SqlitePostsRepository($connectionStub, $this->makeUsersRepository());
+
+        // Вызываем метод получения статьи
+        $post = $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174000'));
+
+        $this->assertSame('123e4567-e89b-12d3-a456-426614174000', (string)$post->getUuid());
     }
 
 }
