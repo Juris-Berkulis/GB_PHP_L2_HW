@@ -35,7 +35,7 @@ class SqliteCommandsRepositoryTest extends TestCase
             public function get(UUID $uuid): User
             {
                 return new User(
-                    new UUID('123e4567-e89b-12d3-a456-426614174001'),
+                    new UUID('123e4567-e89b-12d3-a456-426614174000'),
                     new Name('Ivan', 'Petrov'),
                     'Ivan123',
                 );
@@ -61,7 +61,16 @@ class SqliteCommandsRepositoryTest extends TestCase
 
             public function get(UUID $uuid): Post
             {
-                throw new PostNotFoundException("Not found");
+                return new Post(
+                    new UUID('123e4567-e89b-12d3-a456-426614174001'),
+                    new User(
+                        new UUID('123e4567-e89b-12d3-a456-426614174000'),
+                        new Name('Ivan', 'Petrov'),
+                        'Ivan123',
+                    ),
+                    'Заголовок',
+                    'Тект комментария'
+                );
             }
 
             public function getByUsername(string $username): User
@@ -164,6 +173,44 @@ class SqliteCommandsRepositoryTest extends TestCase
 
         // Вызываем метод получения комментария
         $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174002'));
+    }
+
+    /**
+     * Тест проверяет, что SQLite-репозиторий возвращает комментарий, когда запрашиваемый комментарий найден по его uuid
+     * @throws Exception
+     * @todo Доделать, тест не проходит, похоже, что в getComment в $result все поля имеют значение null
+     * @see SqliteCommandsRepository
+     */
+    public function testItGetCommentByUuidWhenCommentFound(): void
+    {
+        // Создаём стаб подключения
+        $connectionStub = $this->createStub(PDO::class);
+
+        // Создаём стаб запроса
+        $statementStub = $this->createStub(PDOStatement::class);
+
+        // Стаб запроса будет возвращать объект статьи из БД при вызове метода fetch
+        $statementStub->method('fetch')->willReturn([
+            ':uuid' => '123e4567-e89b-12d3-a456-426614174002',
+            ':post_uuid' => '123e4567-e89b-12d3-a456-426614174001',
+            ':user_uuid' => '123e4567-e89b-12d3-a456-426614174000',
+            ':text' => 'Текст комментария',
+        ]);
+
+        // Стаб подключения будет возвращать другой стаб (стаб запроса) при вызове метода prepare
+        $connectionStub->method('prepare')->willReturn($statementStub);
+
+        // Передаём в репозиторий стаб подключения
+        $repository = new SqliteCommandsRepository(
+            $connectionStub,
+            $this->makePostsRepository(),
+            $this->makeUsersRepository(),
+        );
+
+        // Вызываем метод получения комментария
+        $comment = $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174002'));
+
+        $this->assertSame('123e4567-e89b-12d3-a456-426614174002', (string)$comment->getUuid());
     }
 
 }
