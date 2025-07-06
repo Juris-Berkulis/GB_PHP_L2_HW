@@ -41,8 +41,8 @@ class SqliteCommandsRepository implements CommandsRepositoryInterface
         // Выполняем запрос с конкретными значениями
         $statement->execute([
             ':uuid' => (string)$comment->getUuid(),
-            ':post_uuid' => $comment->getPost()->getUuid(),
-            ':user_uuid' => $comment->getUser()->getUuid(),
+            ':post_uuid' => (string)$comment->getPost()->getUuid(),
+            ':user_uuid' => (string)$comment->getUser()->getUuid(),
             ':text' => $comment->getText(),
         ]);
     }
