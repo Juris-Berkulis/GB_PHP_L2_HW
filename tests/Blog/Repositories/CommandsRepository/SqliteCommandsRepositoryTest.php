@@ -178,8 +178,6 @@ class SqliteCommandsRepositoryTest extends TestCase
     /**
      * Тест проверяет, что SQLite-репозиторий возвращает комментарий, когда запрашиваемый комментарий найден по его uuid
      * @throws Exception
-     * @todo Доделать, тест не проходит, похоже, что в getComment в $result все поля имеют значение null
-     * @see SqliteCommandsRepository
      */
     public function testItGetCommentByUuidWhenCommentFound(): void
     {
@@ -191,10 +189,10 @@ class SqliteCommandsRepositoryTest extends TestCase
 
         // Стаб запроса будет возвращать объект статьи из БД при вызове метода fetch
         $statementStub->method('fetch')->willReturn([
-            ':uuid' => '123e4567-e89b-12d3-a456-426614174002',
-            ':post_uuid' => '123e4567-e89b-12d3-a456-426614174001',
-            ':user_uuid' => '123e4567-e89b-12d3-a456-426614174000',
-            ':text' => 'Текст комментария',
+            'uuid' => '123e4567-e89b-12d3-a456-426614174002',
+            'post_uuid' => '123e4567-e89b-12d3-a456-426614174001',
+            'user_uuid' => '123e4567-e89b-12d3-a456-426614174000',
+            'text' => 'Текст комментария',
         ]);
 
         // Стаб подключения будет возвращать другой стаб (стаб запроса) при вызове метода prepare
