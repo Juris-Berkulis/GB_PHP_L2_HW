@@ -1,6 +1,6 @@
 <?php
 
-namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommandsRepository;
+namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
@@ -11,7 +11,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use PDO;
 use PDOStatement;
 
-class SqliteCommandsRepository implements CommandsRepositoryInterface
+class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
 
     private PDO $connection;
