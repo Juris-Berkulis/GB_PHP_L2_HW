@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Конфигурационный файл PHPUnit для проекта.
+    Этот файл настраивает:
+    - Увеличенный лимит памяти (1024M) для предотвращения ошибок "memory exhausted"
+    - Директорию с тестами (tests)
+    - Директорию с исходным кодом для анализа покрытия (src)
+
+    Файл используется при запуске тестов через интерфейс PhpStorm и командную строку.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.2/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true">
+    <php>
+        <!-- Увеличенный лимит памяти для предотвращения ошибок при генерации отчетов о покрытии -->
+        <ini name="memory_limit" value="1024M"/>
+    </php>
+    <testsuites>
+        <!-- Определение набора тестов -->
+        <testsuite name="Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <coverage>
+        <include>
+            <directory>src</directory>
+        </include>
+        <report>
+            <html outputDirectory="coverage_report"/>
+            <clover outputFile="coverage_report.xml"/>
+        </report>
+    </coverage>
+</phpunit>
