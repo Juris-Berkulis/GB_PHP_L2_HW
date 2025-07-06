@@ -119,7 +119,7 @@ class SqlitePostsRepositoryTest extends TestCase
         $this->expectException(PostNotFoundException::class);
         $this->expectExceptionMessage('Статья не найдена: 123e4567-e89b-12d3-a456-426614174000');
 
-        // Вызываем метод получения пользователя
+        // Вызываем метод получения статьи
         $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174000'));
     }
 

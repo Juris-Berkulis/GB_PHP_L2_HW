@@ -3,6 +3,8 @@
 namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\CommandsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommandsRepository\SqliteCommandsRepository;
@@ -128,6 +130,40 @@ class SqliteCommandsRepositoryTest extends TestCase
                 'Текст комментария',
             ),
         );
+    }
+
+    /**
+     * Тест проверяет, что SQLite-репозиторий бросает исключение, когда запрашиваемый комментарий не найден
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
+    public function testItThrowsAnExceptionWhenCommentNotFound(): void
+    {
+        // Создаём стаб подключения
+        $connectionStub = $this->createStub(PDO::class);
+
+        // Создаём стаб запроса
+        $statementStub = $this->createStub(PDOStatement::class);
+
+        // Стаб запроса будет возвращать false при вызове метода fetch
+        $statementStub->method('fetch')->willReturn(false);
+
+        // Стаб подключения будет возвращать другой стаб (стаб запроса) при вызове метода prepare
+        $connectionStub->method('prepare')->willReturn($statementStub);
+
+        // Передаём в репозиторий стаб подключения
+        $repository = new SqliteCommandsRepository(
+            $connectionStub,
+            $this->makePostsRepository(),
+            $this->makeUsersRepository(),
+        );
+
+        // Ожидаем, что будет брошено исключение
+        $this->expectException(CommentNotFoundException::class);
+        $this->expectExceptionMessage('Комментарий не найден: 123e4567-e89b-12d3-a456-426614174002');
+
+        // Вызываем метод получения комментария
+        $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174002'));
     }
 
 }
