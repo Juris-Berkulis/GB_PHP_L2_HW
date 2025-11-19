@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Http;
 
+use JsonException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 
 class Request
@@ -16,7 +17,12 @@ class Request
         /**
          * Аргумент, соответствующий суперглобальной переменной $_SERVER
          */
-        private array $server
+        private array $server,
+
+        /**
+         * Аргумент для хранения тела запроса
+         */
+        private string $body,
     ) {
     }
 
@@ -96,5 +102,69 @@ class Request
 
         return $value;
     }
+
+    /**
+     * Метод для получения массива, сформированного из json-форматированного тела запроса
+     * @return array
+     * @throws HttpException
+     * @throws JsonException
+     */
+    public function jsonBody(): array
+    {
+        try {
+            // Пытаемся декодировать json
+            $data = json_decode(
+                $this->body,
+                // Декодируем в ассоциативный массив
+                associative: true,
+                // Бросаем исключение при ошибке
+                flags: JSON_THROW_ON_ERROR,
+            );
+        } catch (JsonException) {
+            throw new HttpException("Невозможно декодировать json");
+        }
+
+        if (!is_array($data)) {
+            throw new HttpException("Не является массивом/объектом в JSON");
+        }
+
+        return $data;
+    }
+
+    /**
+     * Метод для получения отдельного поля из json-форматированного тела запроса
+     * @param string $field
+     * @return mixed
+     * @throws HttpException|JsonException
+     */
+    public function jsonBodyField(string $field): mixed
+    {
+        $data = $this->jsonBody();
+
+        if (!array_key_exists($field, $data)) {
+            throw new HttpException("Нет поля: $field");
+        }
+
+        if (empty($data[$field])) {
+            throw new HttpException("Пустое поле: $field");
+        }
+
+        return $data[$field];
+    }
+
+    /**
+     * @throws HttpException
+     */
+    public function method(): string
+    {
+        // В суперглобальном массиве $_SERVER HTTP-метод хранится под ключом REQUEST_METHOD
+        if (!array_key_exists('REQUEST_METHOD', $this->server)) {
+            // Если мы не можем получить метод - бросаем исключение
+            throw new HttpException('Невозможно получить метод из запроса');
+        }
+
+        return $this->server['REQUEST_METHOD'];
+    }
+
 
 }

@@ -9,7 +9,12 @@ use JurisBerkulis\GbPhpL2Hw\Http\Request;
 require_once __DIR__ . '/vendor/autoload.php';
 
 // Объект запроса из суперглобальных переменных
-$request = new Request($_GET, $_SERVER);
+$request = new Request(
+    $_GET,
+    $_SERVER,
+    // Читаем поток, содержащий тело запроса
+    file_get_contents('php://input'),
+);
 
 try {
     // Пытаемся получить путь из запроса
@@ -22,32 +27,62 @@ try {
     return;
 }
 
-$routes = [
-    // Действие, соответствующее пути /users/show
-    '/users/show' => new FindByUsername(
-        // Действию нужен репозиторий
-        new SqliteUsersRepository(
-            // Репозиторию нужно подключение к БД
-            new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-        )
-    ),
-//    // Второй маршрут
-//    '/posts/show' => new FindByUuid(
-//        new SqlitePostsRepository(
-//            new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-//        )
-//    ),
-];
-
-// Если нет маршрута для пути из запроса, отправляем неуспешный ответ
-if (!array_key_exists($path, $routes)) {
-    (new ErrorResponse('Not found'))->send();
+try {
+    // Пытаемся получить HTTP-метод запроса
+    $method = $request->method();
+} catch (HttpException) {
+    // Возвращаем неудачный ответ, если по какой-то причине не можем получить метод
+    (new ErrorResponse)->send();
 
     return;
 }
 
-// Выбираем найденное действие
-$action = $routes[$path];
+$routes = [
+    'GET' => [
+        // Действие, соответствующее пути /users/show
+        '/users/show' => new FindByUsername(
+            // Действию нужен репозиторий
+            new SqliteUsersRepository(
+                // Репозиторию нужно подключение к БД
+                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+            )
+        ),
+//        // Действие, соответствующее пути /posts/show
+//        '/posts/show' => new FindByUuid(
+//            new SqlitePostsRepository(
+//                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+//            )
+//        ),
+    ],
+    'POST' => [
+//        // Действие, соответствующее пути /posts/create
+//        '/posts/create' => new CreatePost(
+//            new SqlitePostsRepository(
+//                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+//            ),
+//            new SqliteUsersRepository(
+//                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+//            )
+//        ),
+    ],
+];
+
+// Если нет маршрутов для метода запроса - возвращаем неуспешный ответ
+if (!array_key_exists($method, $routes)) {
+    (new ErrorResponse('Зопрос содержит неизвестный метод'))->send();
+
+    return;
+}
+
+// Ищем маршрут среди маршрутов для этого метода
+if (!array_key_exists($path, $routes[$method])) {
+    (new ErrorResponse('Запрос содержит неизвестный URI'))->send();
+
+    return;
+}
+
+// Выбираем действие по методу и пути
+$action = $routes[$method][$path];
 
 try {
     // Пытаемся выполнить действие, при этом результатом может быть как успешный, так и неуспешный ответ
