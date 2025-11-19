@@ -46,7 +46,7 @@ class FindByUsernameActionTest extends TestCase
         $this->assertInstanceOf(ErrorResponse::class, $response);
 
         // Описываем ожидание того, что будет отправлено в поток вывода
-        $this->expectOutputString('{"success":false,"reason":"В запросе нет такого параметра запроса: username"}');
+        $this->expectOutputString('{"success":false,"reason":"В запросе отсутствует параметр: username"}');
 
         // Отправляем ответ в поток вывода
         $response->send();

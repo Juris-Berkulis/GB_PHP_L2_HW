@@ -55,7 +55,7 @@ class Request
         if (!array_key_exists($param, $this->get)) {
             // Если нет такого параметра в запросе - бросаем исключение
             throw new HttpException(
-                "В запросе нет такого параметра запроса: $param"
+                "В запросе отсутствует параметр: $param"
             );
         }
 
