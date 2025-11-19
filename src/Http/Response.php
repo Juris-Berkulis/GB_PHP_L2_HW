@@ -29,7 +29,7 @@ abstract class Response
         header('Content-Type: application/json');
 
         // Кодируем данные в JSON и отправляем их в теле ответа
-        echo json_encode($data, JSON_THROW_ON_ERROR);
+        echo json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
 
     /**
