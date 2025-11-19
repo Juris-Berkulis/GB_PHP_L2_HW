@@ -50,3 +50,74 @@ composer test-mode-coverage-html
 # Генерация XML для CI систем
 composer test-mode-coverage-clover
 ```
+
+# Документация по API и отладке
+
+## Запуск сервера
+
+Для запуска локального сервера разработки выполните команду:
+
+```bash
+php -S localhost:80 http_api.php
+```
+
+Сервер будет доступен по адресу: `http://localhost:80\`
+
+## API Эндпоинты
+
+**Открытие окна отправления api-запросов:**
+
+`Tools → HTTP Client → Create Request in HTTP Client`
+
+### Создание статьи
+**Метод:** POST
+**URL:** `http://localhost:80/posts/create\`
+**Content-Type:** `application/json`
+
+**Тело запроса:**
+```json
+{
+"author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+"text": "some text",
+"title": "some title"
+}
+```
+
+**Параметры:**
+
+`author_uuid` (string) - UUID автора статьи
+
+`text` (string) - Текст статьи
+
+`title` (string) - Заголовок статьи
+
+### Получение пользователя по username
+
+**Метод:** GET
+**URL:** `http://localhost:80/users/show?username={username}`
+
+**Пример:**
+```
+GET http://localhost:80/users/show?username=ivan
+```
+
+## Отладка с Xdebug
+
+Для включения отладки добавьте заголовок в запрос:
+
+```http
+Cookie: XDEBUG_SESSION=start
+```
+
+Пример полного запроса с отладкой:
+```http
+POST http://localhost:80/posts/create
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=start
+
+{
+"author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+"text": "some text",
+"title": "some title"
+}
+```
