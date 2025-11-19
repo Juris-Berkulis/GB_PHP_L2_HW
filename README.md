@@ -61,7 +61,7 @@ composer test-mode-coverage-clover
 php -S localhost:80 http_api.php
 ```
 
-Сервер будет доступен по адресу: `http://localhost:80\`
+Сервер будет доступен по адресу: `http://localhost:80`
 
 ## API Эндпоинты
 
@@ -69,10 +69,26 @@ php -S localhost:80 http_api.php
 
 `Tools → HTTP Client → Create Request in HTTP Client`
 
+### Получение пользователя по username
+
+**Метод:** GET
+
+**URL:** `http://localhost:80/users/show?username={username}`
+
+**Пример:**
+```
+GET http://localhost:80/users/show?username=ivan
+```
+
 ### Создание статьи
 **Метод:** POST
-**URL:** `http://localhost:80/posts/create\`
-**Content-Type:** `application/json`
+
+**URL:** `http://localhost:80/posts/create`
+
+**Заголовки:**
+```
+Content-Type: application/json
+```
 
 **Тело запроса:**
 ```json
@@ -90,16 +106,6 @@ php -S localhost:80 http_api.php
 `text` (string) - Текст статьи
 
 `title` (string) - Заголовок статьи
-
-### Получение пользователя по username
-
-**Метод:** GET
-**URL:** `http://localhost:80/users/show?username={username}`
-
-**Пример:**
-```
-GET http://localhost:80/users/show?username=ivan
-```
 
 ## Отладка с Xdebug
 
