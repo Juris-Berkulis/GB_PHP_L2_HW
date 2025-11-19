@@ -93,9 +93,9 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-"author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
-"text": "some text",
-"title": "some title"
+    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "text": "some text",
+    "title": "some title"
 }
 ```
 
@@ -122,8 +122,8 @@ Content-Type: application/json
 Cookie: XDEBUG_SESSION=start
 
 {
-"author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
-"text": "some text",
-"title": "some title"
+    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "text": "some text",
+    "title": "some title"
 }
 ```
