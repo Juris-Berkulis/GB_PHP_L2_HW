@@ -143,6 +143,51 @@ class CreatePostActionTest extends TestCase
     }
 
     /**
+     * Тест, проверяющий, что будет возвращён неудачный ответ, если uuid автора в неверном формате
+     * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     * @throws InvalidArgumentException|JsonException
+     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testItReturnsErrorResponseIfAuthorUuidIsInInvalidFormat(): void
+    {
+        $authorUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a';
+        $authorFailUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a-test';
+
+        $request = new Request([], [], '{"author_uuid":"' . $authorFailUuid . '","text":"some text","title":"some title"}');
+
+        $users = [
+            new User(
+                new UUID($authorUuid),
+                new Name('Ivan', 'Petrov'),
+                'ivan',
+            ),
+        ];
+
+        $postsRepository = $this->postsRepository();
+        $usersRepository = $this->usersRepository($users);
+
+        $action = new CreatePost($postsRepository, $usersRepository);
+        $response = $action->handle($request);
+
+        // Проверяем, что ответ - неудачный
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+
+        // Захватываем вывод
+        ob_start();
+        $response->send();
+        $output = ob_get_clean();
+
+        // Парсим JSON и проверяем структуру
+        $responseData = json_decode($output, true);
+
+        // Проверки
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('reason', $responseData);
+        $this->assertTrue($responseData['reason'] === "Неправильно сформированный UUID: $authorFailUuid");
+    }
+
+    /**
      * Тест, проверяющий, что будет возвращён неудачный ответ, если пользователь не найден
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
      */
@@ -178,6 +223,108 @@ class CreatePostActionTest extends TestCase
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('reason', $responseData);
         $this->assertTrue($responseData['reason'] === "Пользователь не найден: $authorUuid");
+    }
+
+    /**
+     * Тест, проверяющий, что будет возвращён неудачный ответ, если нет параметра text
+     * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testItReturnsErrorResponseIfNoTextProvided(): void
+    {
+        $authorUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a';
+
+        $request = new Request([], [], '{"author_uuid":"' . $authorUuid . '","title":"some title"}');
+
+        $users = [
+            new User(
+                new UUID($authorUuid),
+                new Name('Ivan', 'Petrov'),
+                'ivan',
+            ),
+        ];
+
+        $postsRepository = $this->postsRepository();
+        $usersRepository = $this->usersRepository($users);
+
+        $action = new CreatePost($postsRepository, $usersRepository);
+        $response = $action->handle($request);
+
+        // Отладочный вывод
+        if ($response instanceof ErrorResponse) {
+            ob_start();
+            $response->send();
+            $errorOutput = ob_get_clean();
+            echo "Неудачный ответ (ErrorResponse): " . $errorOutput . "\n";
+        }
+
+        // Проверяем, что ответ - неудачный
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+
+        // Захватываем вывод
+        ob_start();
+        $response->send();
+        $output = ob_get_clean();
+
+        // Парсим JSON и проверяем структуру
+        $responseData = json_decode($output, true);
+
+        // Проверки
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('reason', $responseData);
+        $this->assertTrue($responseData['reason'] === 'Нет поля: text');
+    }
+
+    /**
+     * Тест, проверяющий, что будет возвращён неудачный ответ, если параметр title пустой
+     * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testItReturnsErrorResponseIfTitleIsEmpty(): void
+    {
+        $authorUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a';
+
+        $request = new Request([], [], '{"author_uuid":"' . $authorUuid . '","text":"some text","title":""}');
+
+        $users = [
+            new User(
+                new UUID($authorUuid),
+                new Name('Ivan', 'Petrov'),
+                'ivan',
+            ),
+        ];
+
+        $postsRepository = $this->postsRepository();
+        $usersRepository = $this->usersRepository($users);
+
+        $action = new CreatePost($postsRepository, $usersRepository);
+        $response = $action->handle($request);
+
+        // Отладочный вывод
+        if ($response instanceof ErrorResponse) {
+            ob_start();
+            $response->send();
+            $errorOutput = ob_get_clean();
+            echo "Неудачный ответ (ErrorResponse): " . $errorOutput . "\n";
+        }
+
+        // Проверяем, что ответ - неудачный
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+
+        // Захватываем вывод
+        ob_start();
+        $response->send();
+        $output = ob_get_clean();
+
+        // Парсим JSON и проверяем структуру
+        $responseData = json_decode($output, true);
+
+        // Проверки
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('reason', $responseData);
+        $this->assertTrue($responseData['reason'] === "Пустое поле: title");
     }
 
 }
