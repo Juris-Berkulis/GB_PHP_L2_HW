@@ -116,7 +116,7 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Добавьте отладочный вывод
+        // Отладочный вывод
         if ($response instanceof ErrorResponse) {
             ob_start();
             $response->send();
@@ -140,6 +140,44 @@ class CreatePostActionTest extends TestCase
         $this->assertArrayHasKey('data', $responseData);
         $this->assertArrayHasKey('uuid', $responseData['data']);
         $this->assertValidUuid($responseData['data']['uuid']);
+    }
+
+    /**
+     * Тест, проверяющий, что будет возвращён неудачный ответ, если пользователь не найден
+     * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
+    public function testItReturnsErrorResponseIfUserNotFound(): void
+    {
+        $authorUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a';
+
+        $request = new Request([], [], '{"author_uuid":"' . $authorUuid . '","text":"some text","title":"some title"}');
+
+        // Нет пользователей
+        $users = [];
+
+        $postsRepository = $this->postsRepository();
+        $usersRepository = $this->usersRepository($users);
+
+        $action = new CreatePost($postsRepository, $usersRepository);
+        $response = $action->handle($request);
+
+        // Проверяем, что ответ - неудачный
+        $this->assertInstanceOf(ErrorResponse::class, $response);
+
+        // Захватываем вывод
+        ob_start();
+        $response->send();
+        $output = ob_get_clean();
+
+        // Парсим JSON и проверяем структуру
+        $responseData = json_decode($output, true);
+
+        // Проверки
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('reason', $responseData);
+        $this->assertTrue($responseData['reason'] === "Пользователь не найден: $authorUuid");
     }
 
 }
