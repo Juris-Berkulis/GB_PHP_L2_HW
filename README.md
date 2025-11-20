@@ -107,6 +107,17 @@ Content-Type: application/json
 
 `title` (string) - Заголовок статьи
 
+### Удаление статьи
+
+**Метод:** DELETE
+
+**URL:** `http://localhost:80/posts?uuid={uuid}`
+
+**Пример:**
+```
+DELETE http://localhost:80/posts?uuid=c9ccaec2-88b4-41cd-b092-9d64ce9d478a
+```
+
 ## Отладка с Xdebug
 
 Для включения отладки добавьте заголовок в запрос:

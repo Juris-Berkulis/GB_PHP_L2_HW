@@ -41,7 +41,7 @@ class CreatePost implements ActionInterface
         // Пытаемся найти пользователя в репозитории
         try {
             $user = $this->usersRepository->get($authorUuid);
-        } catch (UserNotFoundException $e) {
+        } catch (UserNotFoundException | InvalidArgumentException $e) {
             return new ErrorResponse($e->getMessage());
         }
 

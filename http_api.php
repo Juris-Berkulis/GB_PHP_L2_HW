@@ -4,6 +4,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
@@ -68,6 +69,16 @@ $routes = [
             new SqliteUsersRepository(
                 new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
             )
+        ),
+    ],
+    'DELETE' => [
+        '/posts' => new DeletePost(
+            new SqlitePostsRepository(
+                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
+                new SqliteUsersRepository(
+                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+                )
+            ),
         ),
     ],
 ];
