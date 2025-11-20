@@ -116,26 +116,19 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Отладочный вывод
-        if ($response instanceof ErrorResponse) {
-            ob_start();
-            $response->send();
-            $errorOutput = ob_get_clean();
-            echo "Неудачный ответ (ErrorResponse): " . $errorOutput . "\n";
-        }
-
-        // Проверяем, что ответ - удачный
-        $this->assertInstanceOf(SuccessfulResponse::class, $response);
-
         // Захватываем вывод
         ob_start();
         $response->send();
         $output = ob_get_clean();
 
+        // Отладочный вывод
+        echo "Ответ: " . $output . "\n";
+
         // Парсим JSON и проверяем структуру
         $responseData = json_decode($output, true);
 
         // Проверки
+        $this->assertInstanceOf(SuccessfulResponse::class, $response);
         $this->assertTrue($responseData['success']);
         $this->assertArrayHasKey('data', $responseData);
         $this->assertArrayHasKey('uuid', $responseData['data']);
@@ -170,18 +163,19 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Проверяем, что ответ - неудачный
-        $this->assertInstanceOf(ErrorResponse::class, $response);
-
         // Захватываем вывод
         ob_start();
         $response->send();
         $output = ob_get_clean();
 
+        // Отладочный вывод
+        echo "Ответ: " . $output . "\n";
+
         // Парсим JSON и проверяем структуру
         $responseData = json_decode($output, true);
 
         // Проверки
+        $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('reason', $responseData);
         $this->assertTrue($responseData['reason'] === "Неправильно сформированный UUID: $authorFailUuid");
@@ -190,6 +184,7 @@ class CreatePostActionTest extends TestCase
     /**
      * Тест, проверяющий, что будет возвращён неудачный ответ, если пользователь не найден
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     * @throws JsonException|InvalidArgumentException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
@@ -208,18 +203,19 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Проверяем, что ответ - неудачный
-        $this->assertInstanceOf(ErrorResponse::class, $response);
-
         // Захватываем вывод
         ob_start();
         $response->send();
         $output = ob_get_clean();
 
+        // Отладочный вывод
+        echo "Ответ: " . $output . "\n";
+
         // Парсим JSON и проверяем структуру
         $responseData = json_decode($output, true);
 
         // Проверки
+        $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('reason', $responseData);
         $this->assertTrue($responseData['reason'] === "Пользователь не найден: $authorUuid");
@@ -228,6 +224,7 @@ class CreatePostActionTest extends TestCase
     /**
      * Тест, проверяющий, что будет возвращён неудачный ответ, если нет параметра text
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     * @throws JsonException|InvalidArgumentException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
@@ -251,26 +248,19 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Отладочный вывод
-        if ($response instanceof ErrorResponse) {
-            ob_start();
-            $response->send();
-            $errorOutput = ob_get_clean();
-            echo "Неудачный ответ (ErrorResponse): " . $errorOutput . "\n";
-        }
-
-        // Проверяем, что ответ - неудачный
-        $this->assertInstanceOf(ErrorResponse::class, $response);
-
         // Захватываем вывод
         ob_start();
         $response->send();
         $output = ob_get_clean();
 
+        // Отладочный вывод
+        echo "Ответ: " . $output . "\n";
+
         // Парсим JSON и проверяем структуру
         $responseData = json_decode($output, true);
 
         // Проверки
+        $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('reason', $responseData);
         $this->assertTrue($responseData['reason'] === 'Нет поля: text');
@@ -279,6 +269,7 @@ class CreatePostActionTest extends TestCase
     /**
      * Тест, проверяющий, что будет возвращён неудачный ответ, если параметр title пустой
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
+     * @throws InvalidArgumentException|JsonException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
@@ -302,26 +293,19 @@ class CreatePostActionTest extends TestCase
         $action = new CreatePost($postsRepository, $usersRepository);
         $response = $action->handle($request);
 
-        // Отладочный вывод
-        if ($response instanceof ErrorResponse) {
-            ob_start();
-            $response->send();
-            $errorOutput = ob_get_clean();
-            echo "Неудачный ответ (ErrorResponse): " . $errorOutput . "\n";
-        }
-
-        // Проверяем, что ответ - неудачный
-        $this->assertInstanceOf(ErrorResponse::class, $response);
-
         // Захватываем вывод
         ob_start();
         $response->send();
         $output = ob_get_clean();
 
+        // Отладочный вывод
+        echo "Ответ: " . $output . "\n";
+
         // Парсим JSON и проверяем структуру
         $responseData = json_decode($output, true);
 
         // Проверки
+        $this->assertInstanceOf(ErrorResponse::class, $response);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('reason', $responseData);
         $this->assertTrue($responseData['reason'] === "Пустое поле: title");
