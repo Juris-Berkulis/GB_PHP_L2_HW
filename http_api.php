@@ -1,8 +1,10 @@
 <?php
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
@@ -69,6 +71,29 @@ $routes = [
             new SqliteUsersRepository(
                 new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
             )
+        ),
+        '/posts/comment' => new CreateComment(
+            new SqliteUsersRepository(
+                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+            ),
+            new SqlitePostsRepository(
+                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
+                new SqliteUsersRepository(
+                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+                )
+            ),
+            new SqliteCommentsRepository(
+                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
+                new SqlitePostsRepository(
+                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
+                    new SqliteUsersRepository(
+                        new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+                    )
+                ),
+                new SqliteUsersRepository(
+                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
+                ),
+            ),
         ),
     ],
     'DELETE' => [

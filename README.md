@@ -76,17 +76,18 @@ php -S localhost:80 http_api.php
 **URL:** `http://localhost:80/users/show?username={username}`
 
 **Пример:**
-```
+```http
 GET http://localhost:80/users/show?username=ivan
 ```
 
 ### Создание статьи
+
 **Метод:** POST
 
 **URL:** `http://localhost:80/posts/create`
 
 **Заголовки:**
-```
+```http
 Content-Type: application/json
 ```
 
@@ -107,6 +108,19 @@ Content-Type: application/json
 
 `title` (string) - Заголовок статьи
 
+**Пример:**
+
+```http
+POST http://localhost:80/posts/create
+Content-Type: application/json
+
+{
+    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "text": "some text",
+    "title": "some title"
+}
+```
+
 ### Удаление статьи
 
 **Метод:** DELETE
@@ -114,8 +128,49 @@ Content-Type: application/json
 **URL:** `http://localhost:80/posts?uuid={uuid}`
 
 **Пример:**
-```
+```http
 DELETE http://localhost:80/posts?uuid=c9ccaec2-88b4-41cd-b092-9d64ce9d478a
+```
+
+### Создание комментария
+
+**Метод:** POST
+
+**URL:** `http://localhost:80/posts/comment`
+
+**Заголовки:**
+```http
+Content-Type: application/json
+```
+
+**Тело запроса:**
+```json
+{
+    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
+    "text": "some text"
+}
+```
+
+**Параметры:**
+
+`author_uuid` (string) - UUID автора комментария
+
+`post_uuid` (string) - UUID статьи
+
+`text` (string) - Текст комментария
+
+**Пример:**
+
+```http
+POST http://localhost:80/posts/comment
+Content-Type: application/json
+
+{
+    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
+    "text": "some text"
+}
 ```
 
 ## Отладка с Xdebug
