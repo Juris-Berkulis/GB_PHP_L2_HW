@@ -1,6 +1,6 @@
 <?php
 
-namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\CommandsRepository;
+namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\CommentsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
@@ -78,6 +78,9 @@ class SqliteCommentsRepositoryTest extends TestCase
                 throw new PostNotFoundException("Not found");
             }
 
+            public function delete(UUID $uuid): void
+            {
+            }
         };
     }
 
