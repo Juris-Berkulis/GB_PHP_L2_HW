@@ -1,11 +1,11 @@
 <?php
 
-namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommandsRepository;
+namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 
-interface CommandsRepositoryInterface
+interface CommentsRepositoryInterface
 {
 
     public function save(Comment $comment): void;

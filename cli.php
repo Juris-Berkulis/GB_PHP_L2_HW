@@ -2,7 +2,7 @@
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommandsRepository\SqliteCommandsRepository;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
@@ -47,7 +47,7 @@ $postsRepository = new SqlitePostsRepository($connection, $usersRepository);
 //    echo $e->getMessage();
 //}
 
-$commandsRepository = new SqliteCommandsRepository(
+$commentsRepository = new SqliteCommentsRepository(
     $connection,
     $postsRepository,
     $usersRepository,
@@ -55,7 +55,7 @@ $commandsRepository = new SqliteCommandsRepository(
 
 //// Создаём Комментарий
 //try {
-//    $commandsRepository->save(new Comment(
+//    $commentsRepository->save(new Comment(
 //        UUID::random(),
 //        $usersRepository->getByUsername('admin'),
 //        $postsRepository->get(new UUID('2ddce9b1-5ae9-45dd-95cf-b5c5564de4ed')),
@@ -67,7 +67,7 @@ $commandsRepository = new SqliteCommandsRepository(
 
 // Получение комментарий по его uuid
 try {
-    echo $commandsRepository->get(new UUID('884a5019-041d-42c1-9739-8255a2538978'));
+    echo $commentsRepository->get(new UUID('884a5019-041d-42c1-9739-8255a2538978'));
 } catch (Exception $e) {
     echo $e->getMessage();
 }

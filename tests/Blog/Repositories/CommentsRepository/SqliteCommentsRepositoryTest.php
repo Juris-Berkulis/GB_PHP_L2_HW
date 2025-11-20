@@ -1,13 +1,13 @@
 <?php
 
-namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\CommandsRepository;
+namespace JurisBerkulis\GbPhpL2Hw\UnitTests\Blog\Repositories\CommentsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommandsRepository\SqliteCommandsRepository;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
@@ -19,7 +19,7 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
-class SqliteCommandsRepositoryTest extends TestCase
+class SqliteCommentsRepositoryTest extends TestCase
 {
 
     // Функция возвращает объект анонимного класса (в данном случае это стаб),
@@ -78,6 +78,9 @@ class SqliteCommandsRepositoryTest extends TestCase
                 throw new PostNotFoundException("Not found");
             }
 
+            public function delete(UUID $uuid): void
+            {
+            }
         };
     }
 
@@ -111,7 +114,7 @@ class SqliteCommandsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementMock);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqliteCommandsRepository(
+        $repository = new SqliteCommentsRepository(
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
@@ -161,7 +164,7 @@ class SqliteCommandsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementStub);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqliteCommandsRepository(
+        $repository = new SqliteCommentsRepository(
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
@@ -199,7 +202,7 @@ class SqliteCommandsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementStub);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqliteCommandsRepository(
+        $repository = new SqliteCommentsRepository(
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
