@@ -40,7 +40,7 @@ class CreatePost implements ActionInterface
 
         // Пытаемся найти пользователя в репозитории
         try {
-            $this->usersRepository->get($authorUuid);
+            $user = $this->usersRepository->get($authorUuid);
         } catch (UserNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
@@ -54,7 +54,7 @@ class CreatePost implements ActionInterface
             // Пытаемся создать объект статьи из данных запроса
             $post = new Post(
                 $newPostUuid,
-                $this->usersRepository->get($authorUuid),
+                $user,
                 $request->jsonBodyField('title'),
                 $request->jsonBodyField('text'),
             );
