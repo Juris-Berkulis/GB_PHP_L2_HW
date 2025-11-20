@@ -5,19 +5,19 @@ namespace JurisBerkulis\GbPhpL2Hw\Http;
 use JsonException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 
-class Request
+readonly class Request
 {
 
     public function __construct(
         /**
          * Аргумент, соответствующий суперглобальной переменной $_GET
          */
-        private array $get,
+        private array  $get,
 
         /**
          * Аргумент, соответствующий суперглобальной переменной $_SERVER
          */
-        private array $server,
+        private array  $server,
 
         /**
          * Аргумент для хранения тела запроса
@@ -27,7 +27,7 @@ class Request
     }
 
     /**
-     * Метод для получения пути запроса
+     * Получить путь api-запроса
      * @example Напрмер, для http://example.com/some/page?x=1&y=acb путём будет строка '/some/page'
      * @throws HttpException
      */
@@ -52,7 +52,7 @@ class Request
     }
 
     /**
-     * Метод для получения значения определённого параметра строки запроса
+     * Получить значение определённого параметра строки api-запроса
      * @example Напрмер, для http://example.com/some/page?x=1&y=acb значением параметра x будет строка '1'
      * @throws HttpException
      */
@@ -78,7 +78,7 @@ class Request
     }
 
     /**
-     * Метод для получения значения определённого заголовка
+     * Получить значение определённого заголовка api-запроса
      * @throws HttpException
      */
     public function header(string $header): string
@@ -104,10 +104,9 @@ class Request
     }
 
     /**
-     * Метод для получения массива, сформированного из json-форматированного тела запроса
+     * Получить массив, сформированный из json-форматированного тела api-запроса
      * @return array
      * @throws HttpException
-     * @throws JsonException
      */
     public function jsonBody(): array
     {
@@ -132,10 +131,10 @@ class Request
     }
 
     /**
-     * Метод для получения отдельного поля из json-форматированного тела запроса
+     * Получить значение отдельного поля из json-форматированного тела api-запроса
      * @param string $field
      * @return mixed
-     * @throws HttpException|JsonException
+     * @throws HttpException
      */
     public function jsonBodyField(string $field): mixed
     {
@@ -153,6 +152,7 @@ class Request
     }
 
     /**
+     * Получить метод (GET, POST, DELETE и т.д.) api-запроса
      * @throws HttpException
      */
     public function method(): string
@@ -165,6 +165,5 @@ class Request
 
         return $this->server['REQUEST_METHOD'];
     }
-
 
 }
