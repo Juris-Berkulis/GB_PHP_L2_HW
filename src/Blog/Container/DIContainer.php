@@ -3,6 +3,7 @@
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Container;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\NotFoundException;
+use ReflectionClass;
 
 class DIContainer
 {
@@ -45,8 +46,34 @@ class DIContainer
             throw new NotFoundException("Невозможно определить тип: $type");
         }
 
-        // Создаём объект класса $type
-        return new $type();
+        // Создаём объект рефлексии для запрашиваемого класса
+        $reflectionClass = new ReflectionClass($type);
+
+        // Исследуем конструктор класса
+        $constructor = $reflectionClass->getConstructor();
+
+        // Если конструктора нет - просто создаём объект нужного класса
+        if ($constructor === null) {
+            // Создаём объект класса $type
+            return new $type();
+        }
+
+        /**
+         * Объекты зависимостей класса
+         */
+        $parameters = [];
+
+        // Проходим по всем параметрам конструктора (зависимостям класса)
+        foreach ($constructor->getParameters() as $parameter) {
+            // Узнаем тип параметра конструктора (тип зависимости)
+            $parameterType = $parameter->getType()->getName();
+
+            // Получаем объект зависимости из контейнера
+            $parameters[] = $this->get($parameterType);
+        }
+
+        // Создаём объект класса $type с параметрами
+        return new $type(...$parameters);
     }
 
 }
