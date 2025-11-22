@@ -3,33 +3,54 @@
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Container;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\NotFoundException;
+use Psr\Container\ContainerInterface;
 use ReflectionClass;
 
-class DIContainer
+/**
+ * Контейнер внедрения зависимостей
+ *
+ * Реализует контракт ContainerInterface, отписанный в PSR-11
+ */
+class DIContainer implements ContainerInterface
 {
 
-    // Правила создания объектов
+    /**
+     * @var array Правила создания объектов
+     */
     private array $resolvers = [];
 
     /**
      * Добавить правило
-     * @param string $type
-     * @param string|object $resolver - Имя класса (строка) или экземпляр класса (объект)
+     *
+     * @param string $id Идентификатор искомого объекта
+     * @param string|object $resolver Имя класса (строка) или экземпляр класса (объект)
+     *
      * @return void
      */
-    public function bind(string $type, string | object $resolver): void
+    public function bind(string $id, string | object $resolver): void
     {
-        $this->resolvers[$type] = $resolver;
+        $this->resolvers[$id] = $resolver;
     }
 
-    public function get(string $type): object
+    /**
+     * Найти объект по его идентификатору и вернуть его
+     *
+     * Обязательный метод в PSR-11
+     *
+     * @param string $id Идентификатор искомого объекта
+     *
+     * @return mixed
+     *
+     * @throws NotFoundException
+     */
+    public function get(string $id): object
     {
         // Если есть правило для создания объекта типа $type
         // (например, $type имеет значение '...\UsersRepositoryInterface')
-        if (array_key_exists($type, $this->resolvers)) {
+        if (array_key_exists($id, $this->resolvers)) {
             // Создавать объект того класса, который указан в правиле
             // (например, '...\InMemoryUsersRepository')
-            $typeToCreate = $this->resolvers[$type];
+            $typeToCreate = $this->resolvers[$id];
 
             // Если в контейнере для запрашиваемого типа
             // уже есть предопределённый экземпляр класса — возвращаем его
@@ -42,12 +63,12 @@ class DIContainer
         }
 
         // Бросаем исключение, только если класс не существует
-        if (!class_exists($type)) {
-            throw new NotFoundException("Невозможно определить тип: $type");
+        if (!class_exists($id)) {
+            throw new NotFoundException("Невозможно определить тип: $id");
         }
 
         // Создаём объект рефлексии для запрашиваемого класса
-        $reflectionClass = new ReflectionClass($type);
+        $reflectionClass = new ReflectionClass($id);
 
         // Исследуем конструктор класса
         $constructor = $reflectionClass->getConstructor();
@@ -55,7 +76,7 @@ class DIContainer
         // Если конструктора нет - просто создаём объект нужного класса
         if ($constructor === null) {
             // Создаём объект класса $type
-            return new $type();
+            return new $id();
         }
 
         /**
@@ -73,7 +94,38 @@ class DIContainer
         }
 
         // Создаём объект класса $type с параметрами
-        return new $type(...$parameters);
+        return new $id(...$parameters);
+    }
+
+    /**
+     * Проверить, может ли объект быть создан контейнером
+     *
+     * Возвращает true, если контейнер может вернуть объект
+     * по этому идентификатору, false – в противном случае
+     *
+     * Если `has($id)` возвращает true, это не значит,
+     * что `get($id)` не выбросит исключения.
+     * Это значит, однако, что `get($id)`
+     * не выбросит исключения `NotFoundExceptionInterface`
+     *
+     * Обязательный метод в PSR-11
+     *
+     * @param string $id Идентификатор искомого объекта
+     *
+     * @return bool
+     */
+    public function has(string $id): bool
+    {
+        try {
+            // Пытаемся создать объект требуемого типа
+            $this->get($id);
+        } catch (NotFoundException $e) {
+            // Возвращаем false, если объект не создан...
+            return false;
+        }
+
+        // Возвращаем true, если создан
+        return true;
     }
 
 }
