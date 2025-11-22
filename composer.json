@@ -5,6 +5,11 @@
             "JurisBerkulis\\GbPhpL2Hw\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "JurisBerkulis\\GbPhpL2Hw\\UnitTests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Juris-Berkulis",
