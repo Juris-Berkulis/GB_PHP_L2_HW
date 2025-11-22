@@ -13,12 +13,12 @@ class DIContainer
     /**
      * Добавить правило
      * @param string $type
-     * @param string $class
+     * @param string|object $resolver - Имя класса (строка) или экземпляр класса (объект)
      * @return void
      */
-    public function bind(string $type, string $class): void
+    public function bind(string $type, string | object $resolver): void
     {
-        $this->resolvers[$type] = $class;
+        $this->resolvers[$type] = $resolver;
     }
 
     public function get(string $type): object
@@ -29,6 +29,12 @@ class DIContainer
             // Создавать объект того класса, который указан в правиле
             // (например, '...\InMemoryUsersRepository')
             $typeToCreate = $this->resolvers[$type];
+
+            // Если в контейнере для запрашиваемого типа
+            // уже есть предопределённый экземпляр класса — возвращаем его
+            if (is_object($typeToCreate)) {
+                return $typeToCreate;
+            }
 
             // Вызвать тот же самый метод контейнера и передаём в него имя класса, указанного в правиле
             return $this->get($typeToCreate);

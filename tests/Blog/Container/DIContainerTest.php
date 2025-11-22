@@ -66,4 +66,30 @@ class DIContainerTest extends TestCase
         );
     }
 
+    public function testItReturnsPredefinedObject(): void
+    {
+        // Создаём объект контейнера
+        $container = new DIContainer();
+
+        // Устанавливаем правило, по которому всякий раз,
+        // когда контейнеру нужно вернуть объект типа SomeClassWithParameter,
+        // он возвращал бы предопределённый экземпляр класса SomeClassWithParameter
+        $container->bind(
+            SomeClassWithParameter::class,
+            new SomeClassWithParameter(42)
+        );
+
+        // Пытаемся получить объект типа SomeClassWithParameter
+        $object = $container->get(SomeClassWithParameter::class);
+
+        // Проверяем, что контейнер вернул объект того же типа
+        $this->assertInstanceOf(
+            SomeClassWithParameter::class,
+            $object
+        );
+
+        // Проверяем, что контейнер вернул тот же самый объект
+        $this->assertSame(42, $object->getValue());
+    }
+
 }
