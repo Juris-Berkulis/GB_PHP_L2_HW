@@ -12,6 +12,6 @@ $command = $container->get(CreateUserCommand::class);
 
 try {
     $command->handle(Arguments::fromArgv($argv));
-} catch (AppException $e) {
+} catch (AppException|Exception $e) {
     echo "{$e->getMessage()}\n";
 }

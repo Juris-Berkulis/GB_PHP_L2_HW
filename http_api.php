@@ -81,7 +81,7 @@ try {
 
     // Отправляем ответ
     $response->send();
-} catch (AppException $e) {
+} catch (AppException|Exception $e) {
     // Отправляем неудачный ответ, если что-то пошло не так
     (new ErrorResponse($e->getMessage()))->send();
 }
