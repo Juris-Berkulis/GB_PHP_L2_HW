@@ -57,14 +57,14 @@ $routes = [
 
 // Если нет маршрутов для метода запроса - возвращаем неуспешный ответ
 if (!array_key_exists($method, $routes)) {
-    (new ErrorResponse('Зопрос содержит неизвестный метод'))->send();
+    (new ErrorResponse("Зопрос содержит неизвестный метод: $method"))->send();
 
     return;
 }
 
 // Ищем маршрут среди маршрутов для этого метода
 if (!array_key_exists($path, $routes[$method])) {
-    (new ErrorResponse('Запрос содержит неизвестный URI'))->send();
+    (new ErrorResponse("Запрос содержит неизвестный URI: $path"))->send();
 
     return;
 }
