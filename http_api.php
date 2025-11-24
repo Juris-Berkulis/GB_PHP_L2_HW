@@ -1,6 +1,7 @@
 <?php
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
