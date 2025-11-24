@@ -173,6 +173,80 @@ Content-Type: application/json
 }
 ```
 
+### Добавление лайка статье
+
+**Метод:** POST
+
+**URL:** `http://localhost:80/like/post`
+
+**Заголовки:**
+```http
+Content-Type: application/json
+```
+
+**Тело запроса:**
+```json
+{
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb"
+}
+```
+
+**Параметры:**
+
+`user_uuid` (string) - UUID пользователя, поставившего лайк
+
+`post_uuid` (string) - UUID статьи, которой добавляется лайк
+
+**Пример:**
+
+```http
+POST http://localhost:80/like/post
+Content-Type: application/json
+
+{
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb"
+}
+```
+
+### Добавление лайка комментарию
+
+**Метод:** POST
+
+**URL:** `http://localhost:80/like/comment`
+
+**Заголовки:**
+```http
+Content-Type: application/json
+```
+
+**Тело запроса:**
+```json
+{
+  "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+  "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
+}
+```
+
+**Параметры:**
+
+`user_uuid` (string) - UUID пользователя, поставившего лайк
+
+`comment_uuid` (string) - UUID комментария, которому добавляется лайк
+
+**Пример:**
+
+```http
+POST http://localhost:80/like/comment
+Content-Type: application/json
+
+{
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
+}
+```
+
 ## Отладка с Xdebug
 
 Для включения отладки добавьте заголовок в запрос:

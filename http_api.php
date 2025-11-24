@@ -1,17 +1,18 @@
 <?php
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments\CreateLikeOfComment;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts\CreateLikeOfPost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 
-require_once __DIR__ . '/vendor/autoload.php';
+// Подключаем файл bootstrap.php и получаем настроенный контейнер
+$container = require __DIR__ . '/bootstrap.php';
 
 // Объект запроса из суперглобальных переменных
 $request = new Request(
@@ -42,88 +43,48 @@ try {
     return;
 }
 
+/**
+ * Имена классов действий по пути из URL
+ *
+ * При добавлении маршрута необходимо
+ * добавить правила в файле "bootstrap.php"
+ * для соответствующиго класса и его зависимостей
+ */
 $routes = [
     'GET' => [
-        // Действие, соответствующее пути /users/show
-        '/users/show' => new FindByUsername(
-            // Действию нужен репозиторий
-            new SqliteUsersRepository(
-                // Репозиторию нужно подключение к БД
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-            )
-        ),
-//        // Действие, соответствующее пути /posts/show
-//        '/posts/show' => new FindByUuid(
-//            new SqlitePostsRepository(
-//                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-//            )
-//        ),
+        '/users/show' => FindByUsername::class,
+//        '/posts/show' => FindByUuid::class,
     ],
     'POST' => [
-        // Действие, соответствующее пути /posts/create
-        '/posts/create' => new CreatePost(
-            new SqlitePostsRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
-                new SqliteUsersRepository(
-                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-                )
-            ),
-            new SqliteUsersRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-            )
-        ),
-        '/posts/comment' => new CreateComment(
-            new SqliteUsersRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-            ),
-            new SqlitePostsRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
-                new SqliteUsersRepository(
-                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-                )
-            ),
-            new SqliteCommentsRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
-                new SqlitePostsRepository(
-                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
-                    new SqliteUsersRepository(
-                        new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-                    )
-                ),
-                new SqliteUsersRepository(
-                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-                ),
-            ),
-        ),
+        '/posts/create' => CreatePost::class,
+        '/posts/comment' => CreateComment::class,
+        '/like/post' => CreateLikeOfPost::class,
+        '/like/comment' => CreateLikeOfComment::class,
     ],
     'DELETE' => [
-        '/posts' => new DeletePost(
-            new SqlitePostsRepository(
-                new PDO('sqlite:' . __DIR__ . '/blog.sqlite'),
-                new SqliteUsersRepository(
-                    new PDO('sqlite:' . __DIR__ . '/blog.sqlite')
-                )
-            ),
-        ),
+        '/posts' => DeletePost::class,
     ],
 ];
 
 // Если нет маршрутов для метода запроса - возвращаем неуспешный ответ
 if (!array_key_exists($method, $routes)) {
-    (new ErrorResponse('Зопрос содержит неизвестный метод'))->send();
+    (new ErrorResponse("Зопрос содержит неизвестный метод: $method"))->send();
 
     return;
 }
 
 // Ищем маршрут среди маршрутов для этого метода
 if (!array_key_exists($path, $routes[$method])) {
-    (new ErrorResponse('Запрос содержит неизвестный URI'))->send();
+    (new ErrorResponse("Запрос содержит неизвестный URI: $path"))->send();
 
     return;
 }
 
-// Выбираем действие по методу и пути
-$action = $routes[$method][$path];
+// Получаем имя класса действия для маршрута по методу и пути
+$actionClassName = $routes[$method][$path];
+
+// С помощью контейнера создаём объект нужного действия
+$action = $container->get($actionClassName);
 
 try {
     // Пытаемся выполнить действие, при этом результатом может быть как успешный, так и неуспешный ответ
@@ -131,7 +92,7 @@ try {
 
     // Отправляем ответ
     $response->send();
-} catch (AppException $e) {
+} catch (AppException|Exception $e) {
     // Отправляем неудачный ответ, если что-то пошло не так
     (new ErrorResponse($e->getMessage()))->send();
 }
