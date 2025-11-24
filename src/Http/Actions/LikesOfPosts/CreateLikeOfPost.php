@@ -4,6 +4,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
@@ -54,6 +55,12 @@ readonly class CreateLikeOfPost implements ActionInterface
         try {
             $this->postsRepository->get($postUuid);
         } catch (PostNotFoundException|InvalidArgumentException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+
+        try {
+            $this->likesOfPostsRepository->checkLikeAlreadyExist($userUuid, $postUuid);
+        } catch (LikeAlreadyExist $e) {
             return new ErrorResponse($e->getMessage());
         }
 

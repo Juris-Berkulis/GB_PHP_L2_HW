@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 
@@ -21,5 +22,13 @@ interface LikesOfPostsRepositoryInterface
      * @return array
      */
     function getByPostUuid(UUID $postUuid): array;
+
+    /**
+     * Проверить, существует ли лайк конкретного пользователя для конкретной статьи
+     * @param UUID $userUuid
+     * @param UUID $postUuid
+     * @throws LikeAlreadyExist
+     */
+    function checkLikeAlreadyExist(UUID $userUuid, UUID $postUuid);
 
 }

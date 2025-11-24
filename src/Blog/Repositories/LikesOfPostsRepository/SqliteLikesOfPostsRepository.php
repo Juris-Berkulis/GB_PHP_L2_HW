@@ -3,6 +3,7 @@
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikesNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
@@ -59,6 +60,27 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         }
 
         return $likes;
+    }
+
+    /**
+     * @throws LikeAlreadyExist
+     */
+    function checkLikeAlreadyExist(UUID $userUuid, UUID $postUuid)
+    {
+        $statement = $this->connection->prepare(
+            'SELECT * FROM likes_of_posts WHERE user_uuid = :user_uuid AND post_uuid = :post_uuid'
+        );
+
+        $statement->execute([
+            ':user_uuid'=>(string)$userUuid,
+            ':post_uuid'=>(string)$postUuid,
+        ]);
+
+        $result = $statement->fetch();
+
+        if ($result) {
+            throw new LikeAlreadyExist("Лайк от пользователя $userUuid для статьи $postUuid уже существует");
+        }
     }
 
 }

@@ -5,6 +5,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
@@ -54,6 +55,12 @@ readonly class CreateLikeOfComment implements ActionInterface
         try {
             $this->commentsRepository->get($commentUuid);
         } catch (CommentNotFoundException|InvalidArgumentException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+
+        try {
+            $this->likesOfCommentsRepository->checkLikeAlreadyExist($userUuid, $commentUuid);
+        } catch (LikeAlreadyExist $e) {
             return new ErrorResponse($e->getMessage());
         }
 
