@@ -3,6 +3,8 @@
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments\CreateLikeOfComment;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts\CreateLikeOfPost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
@@ -41,7 +43,13 @@ try {
     return;
 }
 
-// Ассоциируем маршруты с именами классов действий
+/**
+ * Имена классов действий по пути из URL
+ *
+ * При добавлении маршрута необходимо
+ * добавить правила в файле "bootstrap.php"
+ * для соответствующиго класса и его зависимостей
+ */
 $routes = [
     'GET' => [
         '/users/show' => FindByUsername::class,
@@ -50,6 +58,8 @@ $routes = [
     'POST' => [
         '/posts/create' => CreatePost::class,
         '/posts/comment' => CreateComment::class,
+        '/like/post' => CreateLikeOfPost::class,
+        '/like/comment' => CreateLikeOfComment::class,
     ],
     'DELETE' => [
         '/posts' => DeletePost::class,
