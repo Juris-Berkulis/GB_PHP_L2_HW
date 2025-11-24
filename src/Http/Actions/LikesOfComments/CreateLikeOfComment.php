@@ -7,7 +7,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Like;
+use JurisBerkulis\GbPhpL2Hw\Blog\LikeComment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfCommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
@@ -66,7 +66,7 @@ readonly class CreateLikeOfComment implements ActionInterface
 
         $newLikeUuid = UUID::random();
 
-        $like = new Like(
+        $like = new LikeComment(
             $newLikeUuid,
             $userUuid,
             $commentUuid,

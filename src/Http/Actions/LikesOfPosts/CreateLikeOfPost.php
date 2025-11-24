@@ -7,7 +7,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Like;
+use JurisBerkulis\GbPhpL2Hw\Blog\LikePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository\LikesOfPostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
@@ -66,7 +66,7 @@ readonly class CreateLikeOfPost implements ActionInterface
 
         $newLikeUuid = UUID::random();
 
-        $like = new Like(
+        $like = new LikePost(
             $newLikeUuid,
             $userUuid,
             $postUuid,

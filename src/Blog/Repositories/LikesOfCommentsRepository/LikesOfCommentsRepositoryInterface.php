@@ -3,7 +3,7 @@
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
-use JurisBerkulis\GbPhpL2Hw\Blog\Like;
+use JurisBerkulis\GbPhpL2Hw\Blog\LikeComment;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 
 interface LikesOfCommentsRepositoryInterface
@@ -11,10 +11,10 @@ interface LikesOfCommentsRepositoryInterface
 
     /**
      * Сохранить лайк
-     * @param Like $like
+     * @param LikeComment $like
      * @return void
      */
-    function save(Like $like): void;
+    function save(LikeComment $like): void;
 
     /**
      * Получить все лайки комментария

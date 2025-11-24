@@ -5,7 +5,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikesNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Like;
+use JurisBerkulis\GbPhpL2Hw\Blog\LikePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use PDO;
 
@@ -16,7 +16,7 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
     {
     }
 
-    function save(Like $like): void
+    function save(LikePost $like): void
     {
         $statement = $this->connection->prepare(
             'INSERT INTO likes_of_posts (uuid, user_uuid, post_uuid) VALUES (:uuid, :user_uuid, :post_uuid)'
@@ -52,7 +52,7 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         $likes = [];
 
         foreach ($result as $like) {
-            $likes[] = new Like(
+            $likes[] = new LikePost(
                 new UUID($like['uuid']),
                 new UUID($like['user_uuid']),
                 new UUID($like['post_uuid']),
