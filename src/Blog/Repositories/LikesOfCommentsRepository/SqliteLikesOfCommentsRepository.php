@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikesNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
@@ -21,14 +22,15 @@ readonly class SqliteLikesOfCommentsRepository implements LikesOfCommentsReposit
         );
 
         $statement->execute([
-            ':uuid' => $like->getUuid(),
-            ':user_uuid' => $like->getUserUuid(),
-            ':comment_uuid' => $like->getPostUuid(),
+            ':uuid' => (string)$like->getUuid(),
+            ':user_uuid' => (string)$like->getUserUuid(),
+            ':comment_uuid' => (string)$like->getPostUuid(),
         ]);
     }
 
     /**
      * @throws LikesNotFoundException
+     * @throws InvalidArgumentException
      */
     function getByCommentUuid(UUID $commentUuid): array
     {
@@ -37,7 +39,7 @@ readonly class SqliteLikesOfCommentsRepository implements LikesOfCommentsReposit
         );
 
         $statement->execute([
-            ':comment_uuid' => $commentUuid,
+            ':comment_uuid' => (string)$commentUuid,
         ]);
 
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -50,9 +52,9 @@ readonly class SqliteLikesOfCommentsRepository implements LikesOfCommentsReposit
 
         foreach ($result as $like) {
             $likes[] = new Like(
-                $like['uuid'],
-                $like['user_uuid'],
-                $like['comment_uuid'],
+                new UUID($like['uuid']),
+                new UUID($like['user_uuid']),
+                new UUID($like['comment_uuid']),
             );
         }
 

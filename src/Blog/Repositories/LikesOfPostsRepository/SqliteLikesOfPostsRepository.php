@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikesNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Like;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
@@ -21,14 +22,15 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         );
 
         $statement->execute([
-            ':uuid' => $like->getUuid(),
-            ':user_uuid' => $like->getUserUuid(),
-            ':post_uuid' => $like->getPostUuid(),
+            ':uuid' => (string)$like->getUuid(),
+            ':user_uuid' => (string)$like->getUserUuid(),
+            ':post_uuid' => (string)$like->getPostUuid(),
         ]);
     }
 
     /**
      * @throws LikesNotFoundException
+     * @throws InvalidArgumentException
      */
     function getByPostUuid(UUID $postUuid): array
     {
@@ -37,7 +39,7 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         );
 
         $statement->execute([
-            ':post_uuid' => $postUuid,
+            ':post_uuid' => (string)$postUuid,
         ]);
 
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -50,9 +52,9 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
 
         foreach ($result as $like) {
             $likes[] = new Like(
-                $like['uuid'],
-                $like['user_uuid'],
-                $like['post_uuid'],
+                new UUID($like['uuid']),
+                new UUID($like['user_uuid']),
+                new UUID($like['post_uuid']),
             );
         }
 
