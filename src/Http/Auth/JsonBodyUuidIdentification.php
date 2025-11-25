@@ -19,7 +19,7 @@ class JsonBodyUuidIdentification implements IdentificationInterface
     ) {
     }
 
-    public function user(Request $request): User
+    public function getUserByUuid(Request $request): User
     {
         try {
             // Получаем UUID пользователя из JSON-тела запроса;
@@ -35,6 +35,25 @@ class JsonBodyUuidIdentification implements IdentificationInterface
             return $this->usersRepository->get($userUuid);
         } catch (UserNotFoundException $e) {
             // Если пользователь с таким UUID не найден - бросаем исключение
+            throw new AuthException($e->getMessage());
+        }
+    }
+
+    public function getUserByUsername(Request $request): User
+    {
+        try {
+            // Получаем имя пользователя из JSON-тела запроса;
+            $username = $request->jsonBodyField('username');
+        } catch (HttpException $e) {
+            // Если невозможно получить имя пользователя из запроса - бросаем исключение
+            throw new AuthException($e->getMessage());
+        }
+
+        try {
+            // Пытаемся найти пользователя в репозитории
+            return $this->usersRepository->getByUsername($username);
+        } catch (UserNotFoundException $e) {
+            // Если пользователь с таким username не найден - бросаем исключение
             throw new AuthException($e->getMessage());
         }
     }

@@ -3,6 +3,7 @@
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
@@ -30,11 +31,12 @@ class CreateComment implements ActionInterface
 
     /**
      * @throws InvalidArgumentException
+     * @throws AuthException
      */
     public function handle(Request $request): Response
     {
         // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->user($request);
+        $user = $this->identification->getUserByUsername($request);
 
         try {
             $postUuid = new UUID($request->jsonBodyField('post_uuid'));

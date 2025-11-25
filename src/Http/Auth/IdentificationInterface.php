@@ -2,21 +2,36 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Http\Auth;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 
 /**
- * // Контракт описывает единственный метод, получающий пользователя из запроса
+ * Контракт получения пользователя из api-запроса
  */
 interface IdentificationInterface
 {
 
     /**
-     * Получить пользователя из запроса
+     * Получить пользователя из запроса по uuid
+     *
+     * @deprecated Используется метод getUserByUsername
+     *
+     * @see getUserByUsername
      *
      * @param Request $request
      * @return User
+     * @throws AuthException
      */
-    public function user(Request $request): User;
+    public function getUserByUuid(Request $request): User;
+
+    /**
+     * Получить пользователя из запроса по username
+     *
+     * @param Request $request
+     * @return User
+     * @throws AuthException
+     */
+    public function getUserByUsername(Request $request): User;
 
 }

@@ -3,6 +3,7 @@
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts;
 
 use JsonException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
@@ -31,11 +32,12 @@ class CreatePost implements ActionInterface
 
     /**
      * @throws JsonException|InvalidArgumentException
+     * @throws AuthException
      */
     public function handle(Request $request): Response
     {
         // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->user($request);
+        $user = $this->identification->getUserByUsername($request);
 
         /**
          * UUID новой статьи

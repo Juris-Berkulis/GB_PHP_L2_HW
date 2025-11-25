@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
@@ -33,11 +34,12 @@ readonly class CreateLikeOfComment implements ActionInterface
 
     /**
      * @throws InvalidArgumentException
+     * @throws AuthException
      */
     public function handle(Request $request): Response
     {
         // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->user($request);
+        $user = $this->identification->getUserByUsername($request);
         $userUuid = $user->getUuid();
 
         try {

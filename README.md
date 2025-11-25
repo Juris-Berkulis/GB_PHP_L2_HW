@@ -94,7 +94,7 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "text": "some text",
     "title": "some title"
 }
@@ -102,7 +102,7 @@ Content-Type: application/json
 
 **Параметры:**
 
-`user_uuid` (string) - UUID автора статьи
+`username` (string) - username автора статьи
 
 `text` (string) - Текст статьи
 
@@ -115,7 +115,7 @@ POST http://localhost:80/posts/create
 Content-Type: application/json
 
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "text": "some text",
     "title": "some title"
 }
@@ -146,7 +146,7 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
     "text": "some text"
 }
@@ -154,7 +154,7 @@ Content-Type: application/json
 
 **Параметры:**
 
-`user_uuid` (string) - UUID автора комментария
+`username` (string) - username автора комментария
 
 `post_uuid` (string) - UUID статьи
 
@@ -167,7 +167,7 @@ POST http://localhost:80/posts/comment
 Content-Type: application/json
 
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
     "text": "some text"
 }
@@ -187,14 +187,14 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb"
 }
 ```
 
 **Параметры:**
 
-`user_uuid` (string) - UUID пользователя, поставившего лайк
+`username` (string) - username пользователя, поставившего лайк
 
 `post_uuid` (string) - UUID статьи, которой добавляется лайк
 
@@ -205,7 +205,7 @@ POST http://localhost:80/like/post
 Content-Type: application/json
 
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb"
 }
 ```
@@ -224,14 +224,14 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-  "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
-  "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
+    "username": "user123",
+    "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
 }
 ```
 
 **Параметры:**
 
-`user_uuid` (string) - UUID пользователя, поставившего лайк
+`username` (string) - username пользователя, поставившего лайк
 
 `comment_uuid` (string) - UUID комментария, которому добавляется лайк
 
@@ -242,7 +242,7 @@ POST http://localhost:80/like/comment
 Content-Type: application/json
 
 {
-    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "username": "user123",
     "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
 }
 ```
