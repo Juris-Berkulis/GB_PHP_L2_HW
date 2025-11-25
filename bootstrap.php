@@ -11,6 +11,9 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 // Подключаем автозагрузчик Composer
 require_once __DIR__ . '/vendor/autoload.php';
@@ -49,6 +52,37 @@ $container->bind(
 $container->bind(
     LikesOfCommentsRepositoryInterface::class,
     SqliteLikesOfCommentsRepository::class,
+);
+
+// Добавляем логгер в контейнер
+$container->bind(
+    // С контрактом логгера из PSR-3
+    LoggerInterface::class,
+    // Ассоциируем объект логгера из библиотеки monolog
+    // blog – это (произвольное) имя логгера
+    // Логгер вызывает обработчики один за другим в направлении от последнего к первому
+    (new Logger('blog'))
+        // Настраиваем логгер
+        ->pushHandler(new StreamHandler(
+            // записывать в файл '/logs/blog.log'
+            __DIR__ . '/logs/blog.log' // Путь до этого файла
+        ))
+        // Настраиваем логгер
+        ->pushHandler(new StreamHandler(
+            // записывать в файл "blog.error.log"
+            __DIR__ . '/logs/blog.error.log',
+            // события с уровнем ERROR и выше,
+            level: Logger::ERROR,
+            // при этом событие не должно "всплывать" (т.е., если событие обработано,
+            // оно не должно передаваться следующим обработчикам)
+            bubble: false,
+        ))
+        // Настраиваем логгер
+        ->pushHandler(
+            // вести запись в поток "php://stdout", то есть в консоль
+            new StreamHandler("php://stdout")
+        )
+    ,
 );
 
 // Возвращаем объект контейнера

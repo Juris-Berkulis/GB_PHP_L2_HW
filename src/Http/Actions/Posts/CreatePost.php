@@ -15,6 +15,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 class CreatePost implements ActionInterface
 {
@@ -23,6 +24,8 @@ class CreatePost implements ActionInterface
         // Внедряем репозитории статей и пользователей
         private PostsRepositoryInterface $postsRepository,
         private UsersRepositoryInterface $usersRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -64,6 +67,9 @@ class CreatePost implements ActionInterface
 
         // Сохраняем новую статью в репозитории
         $this->postsRepository->save($post);
+
+        // Логируем UUID новой статьи
+        $this->logger->info("Статья создана: $newPostUuid");
 
         // Возвращаем успешный ответ, содержащий UUID новой статьи
         return new SuccessfulResponse([
