@@ -34,7 +34,7 @@ try {
     $logger->warning($e->getMessage());
 
     // Отправляем неудачный ответ, если по какой-то причине не можем получить путь
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
 
     // Выходим из программы
     return;
@@ -48,7 +48,7 @@ try {
     $logger->warning($e->getMessage());
 
     // Возвращаем неудачный ответ, если по какой-то причине не можем получить метод
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
 
     return;
 }
@@ -113,5 +113,5 @@ try {
     $logger->error($e->getMessage(), ['exception' => $e]);
 
     // Отправляем неудачный ответ, если что-то пошло не так
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
 }
