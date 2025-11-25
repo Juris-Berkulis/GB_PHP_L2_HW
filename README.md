@@ -94,7 +94,7 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
     "text": "some text",
     "title": "some title"
 }
@@ -102,7 +102,7 @@ Content-Type: application/json
 
 **Параметры:**
 
-`author_uuid` (string) - UUID автора статьи
+`user_uuid` (string) - UUID автора статьи
 
 `text` (string) - Текст статьи
 
@@ -115,7 +115,7 @@ POST http://localhost:80/posts/create
 Content-Type: application/json
 
 {
-    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
     "text": "some text",
     "title": "some title"
 }
@@ -146,7 +146,7 @@ Content-Type: application/json
 **Тело запроса:**
 ```json
 {
-    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
     "text": "some text"
 }
@@ -154,7 +154,7 @@ Content-Type: application/json
 
 **Параметры:**
 
-`author_uuid` (string) - UUID автора комментария
+`user_uuid` (string) - UUID автора комментария
 
 `post_uuid` (string) - UUID статьи
 
@@ -167,7 +167,7 @@ POST http://localhost:80/posts/comment
 Content-Type: application/json
 
 {
-    "author_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
+    "user_uuid": "4fcfce3d-10ae-4f9d-8911-c3e156aa957a",
     "post_uuid": "9fc1a2a3-f556-4138-9c21-19b4a327b2eb",
     "text": "some text"
 }

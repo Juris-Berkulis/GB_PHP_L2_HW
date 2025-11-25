@@ -13,6 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfC
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -22,7 +23,8 @@ readonly class CreateLikeOfComment implements ActionInterface
 {
 
     public function __construct(
-        private UsersRepositoryInterface           $usersRepository,
+        // Внедряем контракт идентификации
+        private IdentificationInterface            $identification,
         private CommentsRepositoryInterface        $commentsRepository,
         private LikesOfCommentsRepositoryInterface $likesOfCommentsRepository,
     )
@@ -34,17 +36,9 @@ readonly class CreateLikeOfComment implements ActionInterface
      */
     public function handle(Request $request): Response
     {
-        try {
-            $userUuid = new UUID($request->jsonBodyField('user_uuid'));
-        } catch (InvalidArgumentException|HttpException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
-
-        try {
-            $this->usersRepository->get($userUuid);
-        } catch (UserNotFoundException|InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
+        // Идентифицируем пользователя - автора статьи
+        $user = $this->identification->user($request);
+        $userUuid = $user->getUuid();
 
         try {
             $commentUuid = new UUID($request->jsonBodyField('comment_uuid'));

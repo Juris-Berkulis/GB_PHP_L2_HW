@@ -5,12 +5,11 @@ namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts;
 use JsonException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -23,7 +22,8 @@ class CreatePost implements ActionInterface
     public function __construct(
         // Внедряем репозитории статей и пользователей
         private PostsRepositoryInterface $postsRepository,
-        private UsersRepositoryInterface $usersRepository,
+        // Внедряем контракт идентификации
+        private IdentificationInterface $identification,
         // Внедряем контракт логгера
         private LoggerInterface $logger,
     ) {
@@ -34,19 +34,8 @@ class CreatePost implements ActionInterface
      */
     public function handle(Request $request): Response
     {
-        // Пытаемся создать UUID пользователя из данных запроса
-        try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
-        } catch (HttpException | InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
-
-        // Пытаемся найти пользователя в репозитории
-        try {
-            $user = $this->usersRepository->get($authorUuid);
-        } catch (UserNotFoundException | InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
+        // Идентифицируем пользователя - автора статьи
+        $user = $this->identification->user($request);
 
         /**
          * UUID новой статьи

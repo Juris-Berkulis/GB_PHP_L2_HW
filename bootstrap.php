@@ -12,6 +12,8 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\JsonBodyUuidIdentification;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -107,6 +109,11 @@ $container->bind(
     // Контракт логгера из PSR-3
     LoggerInterface::class,
     $logger,
+);
+
+$container->bind(
+    IdentificationInterface::class,
+    JsonBodyUuidIdentification::class
 );
 
 // Возвращаем объект контейнера
