@@ -37,8 +37,8 @@ readonly class CreateUserCommand
             // Логируем сообщение с уровнем WARNING
             $this->logger->warning("Пользователь уже существует: $username");
 
-            // Вместо выбрасывания исключения просто выходим из функции
-            return;
+            // Бросаем исключение, если пользователь уже существует
+            throw new CommandException("Пользователь уже существует: $username");
         }
 
         $uuid = UUID::random();
