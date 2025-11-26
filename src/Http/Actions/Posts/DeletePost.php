@@ -12,11 +12,16 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 readonly class DeletePost implements ActionInterface
 {
 
-    public function __construct(private PostsRepositoryInterface $postsRepository)
+    public function __construct(
+        private PostsRepositoryInterface $postsRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface          $logger,
+    )
     {
     }
 
@@ -35,6 +40,9 @@ readonly class DeletePost implements ActionInterface
         }
 
         $this->postsRepository->delete($postUuid);
+
+        // Логируем UUID удалённой статьи
+        $this->logger->info("Статья удалена: $postUuid");
 
         return new SuccessfulResponse([
             'uuid' => (string)$postUuid,

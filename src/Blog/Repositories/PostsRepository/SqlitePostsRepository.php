@@ -9,6 +9,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 class SqlitePostsRepository implements PostsRepositoryInterface
 {
@@ -17,17 +18,23 @@ class SqlitePostsRepository implements PostsRepositoryInterface
 
     private UsersRepositoryInterface $usersRepository;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         PDO $connection,
-        UsersRepositoryInterface $usersRepository
+        UsersRepositoryInterface $usersRepository,
+        LoggerInterface $logger,
     )
     {
         $this->connection = $connection;
         $this->usersRepository = $usersRepository;
+        $this->logger = $logger;
     }
 
     public function save(Post $post): void
     {
+        $postUuid = (string)$post->getUuid();
+
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
             'INSERT INTO posts (uuid, user_uuid, title, text) VALUES (:uuid, :user_uuid, :title, :text)'
@@ -35,11 +42,14 @@ class SqlitePostsRepository implements PostsRepositoryInterface
 
         // Выполняем запрос с конкретными значениями
         $statement->execute([
-            ':uuid' => (string)$post->getUuid(),
+            ':uuid' => $postUuid,
             ':user_uuid' => $post->getUser()->getUuid(),
             ':title' => $post->getTitle(),
             ':text' => $post->getText(),
         ]);
+
+        // Логируем сообщение с уровнем INFO
+        $this->logger->info("Статья сохранена: $postUuid");
     }
 
     /**
@@ -51,9 +61,12 @@ class SqlitePostsRepository implements PostsRepositoryInterface
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($result === false) {
-            throw new PostNotFoundException(
-                "Статья не найдена: $uniqueField"
-            );
+            $errorMessage = "Статья не найдена: $uniqueField";
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            throw new PostNotFoundException($errorMessage);
         }
 
         // Создаём объект статьи

@@ -10,17 +10,20 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 /**
  * Класс реализует контракт действия
  */
-class FindByUsername implements ActionInterface
+readonly class FindByUsername implements ActionInterface
 {
 
     // Нам понадобится репозиторий пользователей,
     // внедряем его контракт в качестве зависимости
     public function __construct(
-        private UsersRepositoryInterface $usersRepository
+        private UsersRepositoryInterface $usersRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface          $logger
     ) {
     }
 
@@ -35,24 +38,37 @@ class FindByUsername implements ActionInterface
             // Пытаемся получить искомое имя пользователя из запроса
             $username = $request->query('username');
         } catch (HttpException $e) {
-            // Если в запросе нет параметра username -
-            // возвращаем неуспешный ответ,
+            $errorMessage = $e->getMessage();
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            // Если в запросе нет параметра username - возвращаем неуспешный ответ,
             // сообщение об ошибке берём из описания исключения
-            return new ErrorResponse($e->getMessage());
+            return new ErrorResponse($errorMessage);
         }
 
         try {
             // Пытаемся найти пользователя в репозитории
             $user = $this->usersRepository->getByUsername($username);
         } catch (UserNotFoundException $e) {
-            // Если пользователь не найден -
-            // возвращаем неуспешный ответ
-            return new ErrorResponse($e->getMessage());
+            $errorMessage = $e->getMessage();
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            // Если пользователь не найден - возвращаем неуспешный ответ
+            return new ErrorResponse($errorMessage);
         }
+
+        $username = $user->getUsername();
+
+        // Логируем UUID новой статьи
+        $this->logger->info("Пользователь найден по username: $username");
 
         // Возвращаем успешный ответ
         return new SuccessfulResponse([
-            'username' => $user->getUsername(),
+            'username' => $username,
             'name' => $user->getName()->getFirstName() . ' ' . $user->getName()->getLastName(),
         ]);
     }

@@ -4,7 +4,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog;
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 
-class UUID
+readonly class UUID
 {
 
     /**

@@ -9,17 +9,26 @@ use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 class SqliteUsersRepository implements UsersRepositoryInterface
 {
     private PDO $connection;
 
-    public function __construct(PDO $connection) {
+    private LoggerInterface $logger;
+
+    public function __construct(
+        PDO $connection,
+        LoggerInterface $logger,
+    ) {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     public function save(User $user): void
     {
+        $userUuid = (string)$user->getUuid();
+
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
             'INSERT INTO users (uuid, username, first_name, last_name) VALUES (:uuid, :username, :first_name, :last_name)'
@@ -27,11 +36,14 @@ class SqliteUsersRepository implements UsersRepositoryInterface
 
         // Выполняем запрос с конкретными значениями
         $statement->execute([
-            ':uuid' => (string)$user->getUuid(),
+            ':uuid' => $userUuid,
             ':username' => $user->getUsername(),
             ':first_name' => $user->getName()->getFirstName(),
             ':last_name' => $user->getName()->getLastName(),
         ]);
+
+        // Логируем сообщение с уровнем INFO
+        $this->logger->info("Пользователь сохранён: $userUuid");
     }
 
     /**
@@ -43,9 +55,12 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($result === false) {
-            throw new UserNotFoundException(
-                "Пользователь не найден: $uniqueField"
-            );
+            $errorMessage = "Пользователь не найден: $uniqueField";
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            throw new UserNotFoundException($errorMessage);
         }
 
         // Создаём объект пользователя

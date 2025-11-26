@@ -12,6 +12,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\DummyUsersReposito
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PHPUnit\Framework\TestCase;
 
 class CreateUserCommandTest extends TestCase
@@ -29,6 +30,7 @@ class CreateUserCommandTest extends TestCase
         $command = new CreateUserCommand(
             // Передаём стаб в качестве реализации UsersRepositoryInterface
             new DummyUsersRepository(),
+            new DummyLogger(),
         );
 
         // Описываем тип ожидаемого исключения
@@ -71,9 +73,15 @@ class CreateUserCommandTest extends TestCase
      */
     public function testItRequiresFirstName(): void
     {
-        $command = new CreateUserCommand($this->makeUsersRepository());
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            new DummyLogger(),
+        );
+
         $this->expectException(ArgumentsException::class);
+
         $this->expectExceptionMessage('Нет такого аргумента: first_name');
+
         $command->handle(new Arguments(['username' => 'Ivan']));
     }
 
@@ -84,9 +92,15 @@ class CreateUserCommandTest extends TestCase
      */
     public function testItRequiresLastName(): void
     {
-        $command = new CreateUserCommand($this->makeUsersRepository());
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            new DummyLogger(),
+        );
+
         $this->expectException(ArgumentsException::class);
+
         $this->expectExceptionMessage('Нет такого аргумента: last_name');
+
         $command->handle(new Arguments([
             'username' => 'Ivan',
             // Передаём имя пользователя, чтобы дойти до проверки наличия фамилии
@@ -134,7 +148,10 @@ class CreateUserCommandTest extends TestCase
         };
 
         // Передаём мок в команду
-        $command = new CreateUserCommand($usersRepository);
+        $command = new CreateUserCommand(
+            $usersRepository,
+            new DummyLogger(),
+        );
 
         // Запускаем команду
         $command->handle(new Arguments([

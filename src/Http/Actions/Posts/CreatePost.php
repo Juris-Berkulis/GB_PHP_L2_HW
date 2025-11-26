@@ -3,45 +3,44 @@
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts;
 
 use JsonException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
-class CreatePost implements ActionInterface
+readonly class CreatePost implements ActionInterface
 {
 
     public function __construct(
         // Внедряем репозитории статей и пользователей
         private PostsRepositoryInterface $postsRepository,
-        private UsersRepositoryInterface $usersRepository,
+        // Внедряем контракт идентификации
+        private IdentificationInterface  $identification,
+        // Внедряем контракт логгера
+        private LoggerInterface          $logger,
     ) {
     }
 
     /**
      * @throws JsonException|InvalidArgumentException
+     * @throws AuthException
      */
     public function handle(Request $request): Response
     {
-        // Пытаемся создать UUID пользователя из данных запроса
         try {
-            $authorUuid = new UUID($request->jsonBodyField('author_uuid'));
-        } catch (HttpException | InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
-
-        // Пытаемся найти пользователя в репозитории
-        try {
-            $user = $this->usersRepository->get($authorUuid);
-        } catch (UserNotFoundException | InvalidArgumentException $e) {
+            // Идентифицируем пользователя - автора статьи
+            $user = $this->identification->getUserByUsername($request);
+        } catch (UserNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
 
@@ -64,6 +63,9 @@ class CreatePost implements ActionInterface
 
         // Сохраняем новую статью в репозитории
         $this->postsRepository->save($post);
+
+        // Логируем UUID новой статьи
+        $this->logger->info("Статья создана: $newPostUuid");
 
         // Возвращаем успешный ответ, содержащий UUID новой статьи
         return new SuccessfulResponse([

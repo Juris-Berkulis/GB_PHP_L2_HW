@@ -10,6 +10,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
+use Psr\Log\LoggerInterface;
 
 // Подключаем файл bootstrap.php и получаем настроенный контейнер
 $container = require __DIR__ . '/bootstrap.php';
@@ -22,12 +23,18 @@ $request = new Request(
     file_get_contents('php://input'),
 );
 
+// Получаем объект логгера из контейнера
+$logger = $container->get(LoggerInterface::class);
+
 try {
     // Пытаемся получить путь из запроса
     $path = $request->path();
-} catch (HttpException) {
+} catch (HttpException $e) {
+    // Логируем сообщение с уровнем WARNING
+    $logger->warning($e->getMessage());
+
     // Отправляем неудачный ответ, если по какой-то причине не можем получить путь
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
 
     // Выходим из программы
     return;
@@ -36,9 +43,12 @@ try {
 try {
     // Пытаемся получить HTTP-метод запроса
     $method = $request->method();
-} catch (HttpException) {
+} catch (HttpException $e) {
+    // Логируем сообщение с уровнем WARNING
+    $logger->warning($e->getMessage());
+
     // Возвращаем неудачный ответ, если по какой-то причине не можем получить метод
-    (new ErrorResponse)->send();
+    (new ErrorResponse($e->getMessage()))->send();
 
     return;
 }
@@ -68,6 +78,9 @@ $routes = [
 
 // Если нет маршрутов для метода запроса - возвращаем неуспешный ответ
 if (!array_key_exists($method, $routes)) {
+    // Логируем сообщение с уровнем NOTICE
+    $logger->notice("Зопрос содержит неизвестный метод: $method");
+
     (new ErrorResponse("Зопрос содержит неизвестный метод: $method"))->send();
 
     return;
@@ -75,7 +88,10 @@ if (!array_key_exists($method, $routes)) {
 
 // Ищем маршрут среди маршрутов для этого метода
 if (!array_key_exists($path, $routes[$method])) {
-    (new ErrorResponse("Запрос содержит неизвестный URI: $path"))->send();
+    // Логируем сообщение с уровнем NOTICE
+    $logger->notice("Зопрос содержит неизвестный путь: $path");
+
+    (new ErrorResponse("Запрос содержит неизвестный путь: $path"))->send();
 
     return;
 }
@@ -93,6 +109,20 @@ try {
     // Отправляем ответ
     $response->send();
 } catch (AppException|Exception $e) {
+    switch(true) {
+        case $e instanceof AppException: {
+            // Логируем сообщение с уровнем WARNING
+            $logger->warning($e->getMessage());
+
+            break;
+        }
+
+        default: {
+            // Логируем сообщение с уровнем ERROR
+            $logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
+
     // Отправляем неудачный ответ, если что-то пошло не так
     (new ErrorResponse($e->getMessage()))->send();
 }

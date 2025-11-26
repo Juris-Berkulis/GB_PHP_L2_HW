@@ -6,7 +6,9 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Container\DIContainer;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\NotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\InMemoryUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class DIContainerTest extends TestCase
 {
@@ -54,6 +56,11 @@ class DIContainerTest extends TestCase
         $container->bind(
             UsersRepositoryInterface::class,
             InMemoryUsersRepository::class
+        );
+
+        $container->bind(
+            LoggerInterface::class,
+            new DummyLogger(),
         );
 
         // Пытаемся получить объект класса, реализующего контракт UsersRepositoryInterface

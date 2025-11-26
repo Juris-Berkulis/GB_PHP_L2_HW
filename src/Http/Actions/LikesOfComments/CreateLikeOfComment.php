@@ -2,6 +2,7 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\CommentNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
@@ -10,41 +11,43 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\LikeComment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfCommentsRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 readonly class CreateLikeOfComment implements ActionInterface
 {
 
     public function __construct(
-        private UsersRepositoryInterface           $usersRepository,
+        // Внедряем контракт идентификации
+        private IdentificationInterface            $identification,
         private CommentsRepositoryInterface        $commentsRepository,
         private LikesOfCommentsRepositoryInterface $likesOfCommentsRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface          $logger,
     )
     {
     }
 
     /**
      * @throws InvalidArgumentException
+     * @throws AuthException
      */
     public function handle(Request $request): Response
     {
         try {
-            $userUuid = new UUID($request->jsonBodyField('user_uuid'));
-        } catch (InvalidArgumentException|HttpException $e) {
+            // Идентифицируем пользователя - автора статьи
+            $user = $this->identification->getUserByUsername($request);
+        } catch (UserNotFoundException $e) {
             return new ErrorResponse($e->getMessage());
         }
 
-        try {
-            $this->usersRepository->get($userUuid);
-        } catch (UserNotFoundException|InvalidArgumentException $e) {
-            return new ErrorResponse($e->getMessage());
-        }
+        $userUuid = $user->getUuid();
 
         try {
             $commentUuid = new UUID($request->jsonBodyField('comment_uuid'));
@@ -73,6 +76,9 @@ readonly class CreateLikeOfComment implements ActionInterface
         );
 
         $this->likesOfCommentsRepository->save($like);
+
+        // Логируем UUID нового лайка к комментарию
+        $this->logger->info("Лайк к комментарию создан: $newLikeUuid");
 
         return new SuccessfulResponse([
             'uuid'=>(string)$newLikeUuid,
