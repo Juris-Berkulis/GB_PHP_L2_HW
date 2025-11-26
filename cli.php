@@ -17,10 +17,21 @@ $logger = $container->get(LoggerInterface::class);
 try {
     $command->handle(Arguments::fromArgv($argv));
 } catch (AppException|Exception $e) {
-    // Логируем информацию об исключении.
-    // Объект исключения передаётся логгеру с ключом "exception".
-    // Уровень логирования – ERROR
-    $logger->error($e->getMessage(), ['exception' => $e]);
+    switch(true) {
+        case $e instanceof AppException: {
+            // Логируем сообщение с уровнем WARNING
+            $logger->warning($e->getMessage());
+
+            break;
+        }
+
+        default: {
+            // Логируем информацию об исключении.
+            // Объект исключения передаётся логгеру с ключом "exception".
+            // Уровень логирования – ERROR
+            $logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
 
     echo "{$e->getMessage()}\n";
 }

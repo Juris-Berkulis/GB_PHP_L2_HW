@@ -8,25 +8,34 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikesNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\LikePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInterface
 {
 
-    public function __construct(private PDO $connection)
+    public function __construct(
+        private PDO $connection,
+        private LoggerInterface $logger,
+    )
     {
     }
 
     function save(LikePost $like): void
     {
+        $likeUuid = (string)$like->getUuid();
+
         $statement = $this->connection->prepare(
             'INSERT INTO likes_of_posts (uuid, user_uuid, post_uuid) VALUES (:uuid, :user_uuid, :post_uuid)'
         );
 
         $statement->execute([
-            ':uuid' => (string)$like->getUuid(),
+            ':uuid' => $likeUuid,
             ':user_uuid' => (string)$like->getUserUuid(),
             ':post_uuid' => (string)$like->getPostUuid(),
         ]);
+
+        // Логируем сообщение с уровнем INFO
+        $this->logger->info("Лайк к статье сохранён: $likeUuid");
     }
 
     /**
@@ -46,7 +55,12 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($result) === 0) {
-            throw new LikesNotFoundException("Лайки для статьи $postUuid не найдены");
+            $errorMessage = "Лайки для статьи $postUuid не найдены";
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            throw new LikesNotFoundException($errorMessage);
         }
 
         $likes = [];
@@ -79,7 +93,12 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         $result = $statement->fetch();
 
         if ($result) {
-            throw new LikeAlreadyExist("Лайк от пользователя $userUuid для статьи $postUuid уже существует");
+            $errorMessage = "Лайк от пользователя $userUuid для статьи $postUuid уже существует";
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            throw new LikeAlreadyExist($errorMessage);
         }
     }
 

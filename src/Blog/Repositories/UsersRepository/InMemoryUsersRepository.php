@@ -5,15 +5,24 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
+use Psr\Log\LoggerInterface;
 
 class InMemoryUsersRepository implements UsersRepositoryInterface
 {
 
     private array $users = [];
 
+    public function __construct(private readonly LoggerInterface $logger)
+    {
+    }
+
     public function save(User $user): void
     {
         $this->users[] = $user;
+        $userUuid = $user->getUuid();
+
+        // Логируем сообщение с уровнем INFO
+        $this->logger->info("Пользователь сохранён: $userUuid");
     }
 
     /**
@@ -28,7 +37,12 @@ class InMemoryUsersRepository implements UsersRepositoryInterface
             }
         }
 
-        throw new UserNotFoundException("Пользователь с id='$uuid' не найден");
+        $errorMessage = "Пользователь с id='$uuid' не найден";
+
+        // Логируем сообщение с уровнем WARNING
+        $this->logger->warning($errorMessage);
+
+        throw new UserNotFoundException($errorMessage);
     }
 
     /**
@@ -42,7 +56,12 @@ class InMemoryUsersRepository implements UsersRepositoryInterface
             }
         }
 
-        throw new UserNotFoundException("Пользователь не найден: $username");
+        $errorMessage = "Пользователь не найден: $username";
+
+        // Логируем сообщение с уровнем WARNING
+        $this->logger->warning($errorMessage);
+
+        throw new UserNotFoundException($errorMessage);
     }
 
 }

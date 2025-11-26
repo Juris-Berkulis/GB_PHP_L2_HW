@@ -10,6 +10,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 
 class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
@@ -20,19 +21,25 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
 
     private UsersRepositoryInterface $usersRepository;
 
+    private LoggerInterface $logger;
+
     public function __construct(
         PDO $connection,
         PostsRepositoryInterface $postsRepository,
         UsersRepositoryInterface $usersRepository,
+        LoggerInterface $logger,
     )
     {
         $this->connection = $connection;
         $this->postsRepository = $postsRepository;
         $this->usersRepository = $usersRepository;
+        $this->logger = $logger;
     }
 
     public function save(Comment $comment): void
     {
+        $commentUuid = (string)$comment->getUuid();
+
         // Подготавливаем запрос
         $statement = $this->connection->prepare(
             'INSERT INTO comments (uuid, post_uuid, user_uuid, text) VALUES (:uuid, :post_uuid, :user_uuid, :text)'
@@ -40,11 +47,14 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
 
         // Выполняем запрос с конкретными значениями
         $statement->execute([
-            ':uuid' => (string)$comment->getUuid(),
+            ':uuid' => $commentUuid,
             ':post_uuid' => (string)$comment->getPost()->getUuid(),
             ':user_uuid' => (string)$comment->getUser()->getUuid(),
             ':text' => $comment->getText(),
         ]);
+
+        // Логируем сообщение с уровнем INFO
+        $this->logger->info("Комментарий сохранён: $commentUuid");
     }
 
     /**
@@ -56,9 +66,12 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
         $result = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($result === false) {
-            throw new CommentNotFoundException(
-                "Комментарий не найден: $uniqueField"
-            );
+            $errorMessage = "Комментарий не найден: $uniqueField";
+
+            // Логируем сообщение с уровнем WARNING
+            $this->logger->warning($errorMessage);
+
+            throw new CommentNotFoundException($errorMessage);
         }
 
         // Создаём объект комментария

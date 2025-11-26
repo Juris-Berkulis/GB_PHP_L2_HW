@@ -17,16 +17,16 @@ use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
 use Psr\Log\LoggerInterface;
 
-class CreatePost implements ActionInterface
+readonly class CreatePost implements ActionInterface
 {
 
     public function __construct(
         // Внедряем репозитории статей и пользователей
         private PostsRepositoryInterface $postsRepository,
         // Внедряем контракт идентификации
-        private IdentificationInterface $identification,
+        private IdentificationInterface  $identification,
         // Внедряем контракт логгера
-        private LoggerInterface $logger,
+        private LoggerInterface          $logger,
     ) {
     }
 

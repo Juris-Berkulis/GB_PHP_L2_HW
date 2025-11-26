@@ -109,8 +109,19 @@ try {
     // Отправляем ответ
     $response->send();
 } catch (AppException|Exception $e) {
-    // Логируем сообщение с уровнем ERROR
-    $logger->error($e->getMessage(), ['exception' => $e]);
+    switch(true) {
+        case $e instanceof AppException: {
+            // Логируем сообщение с уровнем WARNING
+            $logger->warning($e->getMessage());
+
+            break;
+        }
+
+        default: {
+            // Логируем сообщение с уровнем ERROR
+            $logger->error($e->getMessage(), ['exception' => $e]);
+        }
+    }
 
     // Отправляем неудачный ответ, если что-то пошло не так
     (new ErrorResponse($e->getMessage()))->send();

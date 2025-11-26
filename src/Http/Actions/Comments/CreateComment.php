@@ -16,15 +16,18 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
-class CreateComment implements ActionInterface
+readonly class CreateComment implements ActionInterface
 {
 
     public function __construct(
         // Внедряем контракт идентификации
-        private IdentificationInterface $identification,
-        private PostsRepositoryInterface $postsRepository,
+        private IdentificationInterface     $identification,
+        private PostsRepositoryInterface    $postsRepository,
         private CommentsRepositoryInterface $commentsRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface             $logger,
     )
     {
     }
@@ -64,6 +67,9 @@ class CreateComment implements ActionInterface
         }
 
         $this->commentsRepository->save($comment);
+
+        // Логируем UUID нового комментария
+        $this->logger->info("Комментарий создан: $newCommentUuid");
 
         return new SuccessfulResponse([
             'uuid' => (string)$newCommentUuid,

@@ -19,6 +19,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
+use Psr\Log\LoggerInterface;
 
 readonly class CreateLikeOfComment implements ActionInterface
 {
@@ -28,6 +29,8 @@ readonly class CreateLikeOfComment implements ActionInterface
         private IdentificationInterface            $identification,
         private CommentsRepositoryInterface        $commentsRepository,
         private LikesOfCommentsRepositoryInterface $likesOfCommentsRepository,
+        // Внедряем контракт логгера
+        private LoggerInterface          $logger,
     )
     {
     }
@@ -69,6 +72,9 @@ readonly class CreateLikeOfComment implements ActionInterface
         );
 
         $this->likesOfCommentsRepository->save($like);
+
+        // Логируем UUID нового лайка к комментарию
+        $this->logger->info("Лайк к комментарию создан: $newLikeUuid");
 
         return new SuccessfulResponse([
             'uuid'=>(string)$newLikeUuid,
