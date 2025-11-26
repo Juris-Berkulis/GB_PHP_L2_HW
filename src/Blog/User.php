@@ -59,12 +59,4 @@ class User
         return $this->username;
     }
 
-    /**
-     * @param string $username
-     */
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
-
 }

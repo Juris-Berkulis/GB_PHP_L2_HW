@@ -11,7 +11,6 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\LikeComment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfCommentsRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;

@@ -15,7 +15,7 @@ class SuccessfulResponse extends Response
      * @param array $data
      */
     public function __construct(
-        private array $data = []
+        private readonly array $data = []
     ) {
     }
 

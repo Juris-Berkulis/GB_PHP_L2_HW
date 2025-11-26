@@ -33,19 +33,9 @@ class Comment
         return $this->user;
     }
 
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
     public function getPost(): Post
     {
         return $this->post;
-    }
-
-    public function setPost(Post $post): void
-    {
-        $this->post = $post;
     }
 
     public function getText(): string

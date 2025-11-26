@@ -130,6 +130,7 @@ class CreatePostActionTest extends TestCase
      * Тест, проверяющий, что будет возвращён удачный ответ
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
      * @throws InvalidArgumentException|JsonException
+     * @throws AuthException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
@@ -183,12 +184,12 @@ class CreatePostActionTest extends TestCase
      * Тест, проверяющий, что будет возвращён неудачный ответ, если пользователь не найден
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
      * @throws JsonException|InvalidArgumentException
+     * @throws AuthException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
     public function testItReturnsErrorResponseIfUserNotFound(): void
     {
-        $authorUuid = '4fcfce3d-10ae-4f9d-8911-c3e156aa957a';
         $username = 'ivan';
 
         $request = new Request([], [], '{"username":"' . $username . '","text":"some text","title":"some title"}');
@@ -230,6 +231,7 @@ class CreatePostActionTest extends TestCase
      * Тест, проверяющий, что будет возвращён неудачный ответ, если нет параметра text
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
      * @throws JsonException|InvalidArgumentException
+     * @throws AuthException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
@@ -282,6 +284,7 @@ class CreatePostActionTest extends TestCase
      * Тест, проверяющий, что будет возвращён неудачный ответ, если параметр title пустой
      * @description Запускаем тест (с помощбю RunInSeparateProcess и PreserveGlobalState) в отдельном процессе
      * @throws InvalidArgumentException|JsonException
+     * @throws AuthException
      */
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]

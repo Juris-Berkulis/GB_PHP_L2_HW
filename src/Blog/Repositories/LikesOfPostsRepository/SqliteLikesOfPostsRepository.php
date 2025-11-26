@@ -79,7 +79,7 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
     /**
      * @throws LikeAlreadyExist
      */
-    function checkLikeAlreadyExist(UUID $userUuid, UUID $postUuid)
+    function checkLikeAlreadyExist(UUID $userUuid, UUID $postUuid): void
     {
         $statement = $this->connection->prepare(
             'SELECT * FROM likes_of_posts WHERE user_uuid = :user_uuid AND post_uuid = :post_uuid'

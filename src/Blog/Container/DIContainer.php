@@ -119,7 +119,7 @@ class DIContainer implements ContainerInterface
         try {
             // Пытаемся создать объект требуемого типа
             $this->get($id);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             // Возвращаем false, если объект не создан...
             return false;
         }

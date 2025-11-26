@@ -15,15 +15,15 @@ use Psr\Log\LoggerInterface;
 /**
  * Класс реализует контракт действия
  */
-class FindByUsername implements ActionInterface
+readonly class FindByUsername implements ActionInterface
 {
 
     // Нам понадобится репозиторий пользователей,
     // внедряем его контракт в качестве зависимости
     public function __construct(
-        private readonly UsersRepositoryInterface $usersRepository,
+        private UsersRepositoryInterface $usersRepository,
         // Внедряем контракт логгера
-        private LoggerInterface                   $logger
+        private LoggerInterface          $logger
     ) {
     }
 
