@@ -8,6 +8,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersReposit
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
@@ -36,7 +37,10 @@ class SqliteUsersRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementStub);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqliteUsersRepository($connectionStub);
+        $repository = new SqliteUsersRepository(
+            $connectionStub,
+            new DummyLogger(),
+        );
 
         // Ожидаем, что будет брошено исключение
         $this->expectException(UserNotFoundException::class);
@@ -76,7 +80,10 @@ class SqliteUsersRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementMock);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqliteUsersRepository($connectionStub);
+        $repository = new SqliteUsersRepository(
+            $connectionStub,
+            new DummyLogger(),
+        );
 
         // Вызываем метод сохранения пользователя
         $repository->save(

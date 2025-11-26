@@ -14,6 +14,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
@@ -118,6 +119,7 @@ class SqliteCommentsRepositoryTest extends TestCase
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
+            new DummyLogger(),
         );
 
         // Вызываем метод сохранения комментария
@@ -168,6 +170,7 @@ class SqliteCommentsRepositoryTest extends TestCase
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
+            new DummyLogger(),
         );
 
         // Ожидаем, что будет брошено исключение
@@ -206,6 +209,7 @@ class SqliteCommentsRepositoryTest extends TestCase
             $connectionStub,
             $this->makePostsRepository(),
             $this->makeUsersRepository(),
+            new DummyLogger(),
         );
 
         // Вызываем метод получения комментария

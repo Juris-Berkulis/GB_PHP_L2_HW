@@ -6,6 +6,7 @@ use JsonException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
@@ -36,8 +37,12 @@ readonly class CreatePost implements ActionInterface
      */
     public function handle(Request $request): Response
     {
-        // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->getUserByUsername($request);
+        try {
+            // Идентифицируем пользователя - автора статьи
+            $user = $this->identification->getUserByUsername($request);
+        } catch (UserNotFoundException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
 
         /**
          * UUID новой статьи

@@ -41,8 +41,13 @@ readonly class CreateLikeOfComment implements ActionInterface
      */
     public function handle(Request $request): Response
     {
-        // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->getUserByUsername($request);
+        try {
+            // Идентифицируем пользователя - автора статьи
+            $user = $this->identification->getUserByUsername($request);
+        } catch (UserNotFoundException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+
         $userUuid = $user->getUuid();
 
         try {

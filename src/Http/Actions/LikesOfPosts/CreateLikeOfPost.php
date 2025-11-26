@@ -7,6 +7,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\LikePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository\LikesOfPostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
@@ -39,8 +40,13 @@ readonly class CreateLikeOfPost implements ActionInterface
      */
     public function handle(Request $request): Response
     {
-        // Идентифицируем пользователя - автора статьи
-        $user = $this->identification->getUserByUsername($request);
+        try {
+            // Идентифицируем пользователя - автора статьи
+            $user = $this->identification->getUserByUsername($request);
+        } catch (UserNotFoundException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+
         $userUuid = $user->getUuid();
 
         try {

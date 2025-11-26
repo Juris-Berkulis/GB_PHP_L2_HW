@@ -13,6 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +38,10 @@ class FindByUsernameActionTest extends TestCase
         $usersRepository = $this->usersRepository([]);
 
         //Создаём объект действия
-        $action = new FindByUsername($usersRepository);
+        $action = new FindByUsername(
+            $usersRepository,
+            new DummyLogger(),
+        );
 
         // Запускаем действие
         $response = $action->handle($request);
@@ -67,7 +71,11 @@ class FindByUsernameActionTest extends TestCase
         // Репозиторий пользователей по-прежнему пуст
         $usersRepository = $this->usersRepository([]);
 
-        $action = new FindByUsername($usersRepository);
+        $action = new FindByUsername(
+            $usersRepository,
+            new DummyLogger(),
+        );
+
         $response = $action->handle($request);
 
         $this->assertInstanceOf(ErrorResponse::class, $response);
@@ -96,7 +104,11 @@ class FindByUsernameActionTest extends TestCase
             ),
         ]);
 
-        $action = new FindByUsername($usersRepository);
+        $action = new FindByUsername(
+            $usersRepository,
+            new DummyLogger(),
+        );
+
         $response = $action->handle($request);
 
         // Проверяем, что ответ - удачный

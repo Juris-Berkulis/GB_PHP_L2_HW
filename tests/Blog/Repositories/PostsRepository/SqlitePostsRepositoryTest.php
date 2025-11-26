@@ -11,6 +11,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
+use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
@@ -76,7 +77,11 @@ class SqlitePostsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementMock);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqlitePostsRepository($connectionStub, $this->makeUsersRepository());
+        $repository = new SqlitePostsRepository(
+            $connectionStub,
+            $this->makeUsersRepository(),
+            new DummyLogger(),
+        );
 
         // Вызываем метод сохранения пользователя
         $repository->save(
@@ -113,7 +118,11 @@ class SqlitePostsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementStub);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqlitePostsRepository($connectionStub, $this->makeUsersRepository());
+        $repository = new SqlitePostsRepository(
+            $connectionStub,
+            $this->makeUsersRepository(),
+            new DummyLogger(),
+        );
 
         // Ожидаем, что будет брошено исключение
         $this->expectException(PostNotFoundException::class);
@@ -147,7 +156,11 @@ class SqlitePostsRepositoryTest extends TestCase
         $connectionStub->method('prepare')->willReturn($statementStub);
 
         // Передаём в репозиторий стаб подключения
-        $repository = new SqlitePostsRepository($connectionStub, $this->makeUsersRepository());
+        $repository = new SqlitePostsRepository(
+            $connectionStub,
+            $this->makeUsersRepository(),
+            new DummyLogger(),
+        );
 
         // Вызываем метод получения статьи
         $post = $repository->get(new UUID('123e4567-e89b-12d3-a456-426614174000'));
