@@ -73,14 +73,18 @@ class User
     /**
      * Вычислить хеша пароля
      *
-     * Использует SHA-256
+     * Использует алгоритм хеширования SHA-256
      *
+     * uuid применяется в качестве соли
+     *
+     * @param UUID $uuid
      * @param string $password
      * @return string
      */
-    private static function hash(string $password): string
+    private static function hash(UUID $uuid, string $password): string
     {
-        return hash('sha256', $password);
+        // Используем UUID в качестве соли
+        return hash('sha256', $uuid . $password);
     }
 
     /**
@@ -90,7 +94,7 @@ class User
      */
     public function checkPassword(string $password): bool
     {
-        return $this->hashedPassword === self::hash($password);
+        return $this->hashedPassword === self::hash($this->uuid, $password);
     }
 
     /**
@@ -110,11 +114,13 @@ class User
         Name $name
     ): self
     {
+        $uuid = UUID::random();
+
         return new self(
-            UUID::random(),
+            $uuid,
             $name,
             $username,
-            self::hash($password),
+            self::hash($uuid, $password),
         );
     }
 
