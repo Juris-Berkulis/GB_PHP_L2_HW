@@ -13,7 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\TokenAuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
@@ -74,12 +74,12 @@ class CreatePostActionTest extends TestCase
     public function authentication(
         UsersRepositoryInterface $usersRepository,
         string $username,
-    ): AuthenticationInterface
+    ): TokenAuthenticationInterface
     {
         return new readonly class (
             $usersRepository,
             $username,
-        ) implements AuthenticationInterface
+        ) implements TokenAuthenticationInterface
         {
 
             public function __construct(
@@ -89,12 +89,7 @@ class CreatePostActionTest extends TestCase
             {
             }
 
-            public function getUserByUuid(Request $request): User
-            {
-                throw new AuthException('');
-            }
-
-            public function getUserByUsername(Request $request): User
+            public function getUser(Request $request): User
             {
                 try {
                     return $this->usersRepository->getByUsername($this->username);

@@ -14,8 +14,10 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\BearerTokenAuthentication;
 use JurisBerkulis\GbPhpL2Hw\Http\Auth\PasswordAuthentication;
 use JurisBerkulis\GbPhpL2Hw\Http\Auth\PasswordAuthenticationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\TokenAuthenticationInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -116,6 +118,11 @@ $container->bind(
 $container->bind(
     PasswordAuthenticationInterface::class,
     PasswordAuthentication::class
+);
+
+$container->bind(
+    TokenAuthenticationInterface::class,
+    BearerTokenAuthentication::class
 );
 
 $container->bind(

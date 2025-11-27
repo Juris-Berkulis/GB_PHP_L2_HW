@@ -7,13 +7,12 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\LikeAlreadyExist;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\LikePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfPostsRepository\LikesOfPostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\TokenAuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -25,7 +24,7 @@ readonly class CreateLikeOfPost implements ActionInterface
 
     public function __construct(
         // Внедряем контракт идентификации
-        private AuthenticationInterface         $authentication,
+        private TokenAuthenticationInterface         $authentication,
         private PostsRepositoryInterface        $postsRepository,
         private LikesOfPostsRepositoryInterface $likesOfPostsRepository,
         // Внедряем контракт логгера
@@ -42,7 +41,7 @@ readonly class CreateLikeOfPost implements ActionInterface
     {
         try {
             // Идентифицируем пользователя - автора статьи
-            $user = $this->authentication->getUserByUsername($request);
+            $user = $this->authentication->getUser($request);
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }
