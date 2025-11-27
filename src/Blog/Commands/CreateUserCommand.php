@@ -33,6 +33,9 @@ readonly class CreateUserCommand
         $username = $arguments->get('username');
         $password = $arguments->get('password');
 
+        // Вычисляем SHA-256-хеш пароля
+        $passwordHash = hash('sha256', $password);
+
         // Проверяем, существует ли пользователь в репозитории
         if ($this->userExists($username)) {
             $errorMessage = "Пользователь уже существует: $username";
@@ -54,7 +57,7 @@ readonly class CreateUserCommand
                 $arguments->get('last_name'),
             ),
             $username,
-            $password,
+            $passwordHash,
         ));
 
         // Логируем информацию о новом пользователе
