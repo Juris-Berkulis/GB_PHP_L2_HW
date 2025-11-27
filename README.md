@@ -69,6 +69,43 @@ php -S localhost:80 http_api.php
 
 `Tools → HTTP Client → Create Request in HTTP Client`
 
+### Аутентификация
+
+**Метод:** POST
+
+**URL:** `http://localhost:80/login`
+
+**Заголовки:**
+```http
+Content-Type: application/json
+```
+
+**Тело запроса:**
+```json
+{
+  "username": "user",
+  "password": "pass"
+}
+```
+
+**Параметры:**
+
+`username` (string) - username пользователя
+
+`password` (string) - пароль пользователя
+
+**Пример:**
+
+```http
+POST http://localhost:80/login
+Content-Type: application/json
+
+{
+    "username": "user4",
+    "password": "pass1"
+}
+```
+
 ### Получение пользователя по username
 
 **Метод:** GET

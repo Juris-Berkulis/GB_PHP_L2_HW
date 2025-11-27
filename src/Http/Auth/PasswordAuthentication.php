@@ -9,7 +9,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 
-readonly class PasswordAuthentication implements AuthenticationInterface
+readonly class PasswordAuthentication implements PasswordAuthenticationInterface
 {
 
     public function __construct(

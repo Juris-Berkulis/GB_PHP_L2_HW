@@ -2,6 +2,8 @@
 
 use Dotenv\Dotenv;
 use JurisBerkulis\GbPhpL2Hw\Blog\Container\DIContainer;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\SqliteAuthTokensRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfCommentsRepositoryInterface;
@@ -12,8 +14,8 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\Auth\PasswordAuthentication;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\PasswordAuthenticationInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -112,8 +114,13 @@ $container->bind(
 );
 
 $container->bind(
-    AuthenticationInterface::class,
+    PasswordAuthenticationInterface::class,
     PasswordAuthentication::class
+);
+
+$container->bind(
+    AuthTokensRepositoryInterface::class,
+    SqliteAuthTokensRepository::class
 );
 
 // Возвращаем объект контейнера
