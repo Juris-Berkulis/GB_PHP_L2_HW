@@ -13,7 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsReposit
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\JsonBodyUuidAuthentication;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\PasswordAuthentication;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -113,7 +113,7 @@ $container->bind(
 
 $container->bind(
     AuthenticationInterface::class,
-    JsonBodyUuidAuthentication::class
+    PasswordAuthentication::class
 );
 
 // Возвращаем объект контейнера

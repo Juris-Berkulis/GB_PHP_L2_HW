@@ -38,8 +38,8 @@ readonly class CreatePost implements ActionInterface
     public function handle(Request $request): Response
     {
         try {
-            // Идентифицируем пользователя - автора статьи
-            $user = $this->authentication->getUserByUsername($request);
+            // Аутентификация пользователя - автора статьи
+            $user = $this->authentication->getUser($request);
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }

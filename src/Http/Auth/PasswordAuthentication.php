@@ -9,11 +9,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 
-/**
- * @deprecated
- * @see PasswordAuthentication
- */
-readonly class JsonBodyUuidAuthentication implements AuthenticationInterface
+readonly class PasswordAuthentication implements AuthenticationInterface
 {
 
     public function __construct(
@@ -23,6 +19,7 @@ readonly class JsonBodyUuidAuthentication implements AuthenticationInterface
 
     public function getUser(Request $request): User
     {
+        // 1. Идентифицируем пользователя
         try {
             // Получаем имя пользователя из JSON-тела запроса;
             $username = $request->jsonBodyField('username');
@@ -33,11 +30,29 @@ readonly class JsonBodyUuidAuthentication implements AuthenticationInterface
 
         try {
             // Пытаемся найти пользователя в репозитории
-            return $this->usersRepository->getByUsername($username);
+            $user = $this->usersRepository->getByUsername($username);
         } catch (UserNotFoundException $e) {
             // Если пользователь с таким username не найден - бросаем исключение
             throw new AuthException($e->getMessage());
         }
-    }
 
+        // 2. Аутентифицируем пользователя
+        // Проверяем, что предъявленный пароль соответствует сохранённому в БД
+        try {
+            // Получаем пароль пользователя из JSON-тела запроса;
+            $password = $request->jsonBodyField('password');
+        } catch (HttpException $e) {
+            // Если невозможно получить пароль пользователя из запроса - бросаем исключение
+            throw new AuthException($e->getMessage());
+        }
+
+        if ($password !== $user->getPassword()) {
+            // Если пароли не совпадают — бросаем исключение
+            throw new AuthException('Неправильный пароль');
+        }
+
+        // Пользователь аутентифицирован
+        return $user;
+
+    }
 }

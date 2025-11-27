@@ -13,25 +13,11 @@ interface AuthenticationInterface
 {
 
     /**
-     * Получить пользователя из запроса по uuid
-     *
-     * @deprecated Используется метод getUserByUsername
-     *
-     * @see getUserByUsername
-     *
+     * Получить пользователя
      * @param Request $request
      * @return User
      * @throws AuthException
      */
-    public function getUserByUuid(Request $request): User;
-
-    /**
-     * Получить пользователя из запроса по username
-     *
-     * @param Request $request
-     * @return User
-     * @throws AuthException
-     */
-    public function getUserByUsername(Request $request): User;
+    public function getUser(Request $request): User;
 
 }
