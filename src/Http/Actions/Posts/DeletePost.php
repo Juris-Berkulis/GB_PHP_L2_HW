@@ -6,7 +6,6 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
-use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
@@ -35,7 +34,7 @@ readonly class DeletePost implements ActionInterface
         try {
             // Аутентификация пользователя - автора статьи
             $user = $this->authentication->getUser($request);
-        } catch (AuthException|UserNotFoundException $e) {
+        } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }
 

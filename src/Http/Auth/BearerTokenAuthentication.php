@@ -7,6 +7,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthTokenNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthTokensRepositoryException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
@@ -61,8 +62,12 @@ class BearerTokenAuthentication implements TokenAuthenticationInterface
         // Получаем UUID пользователя из токена
         $userUuid = $authToken->getUserUuid();
 
-        // Ищем и возвращаем пользователя
-        return $this->usersRepository->get($userUuid);
+        try {
+            // Ищем и возвращаем пользователя
+            return $this->usersRepository->get($userUuid);
+        } catch (UserNotFoundException $e) {
+            throw new AuthException($e->getMessage());
+        }
     }
 
 }
