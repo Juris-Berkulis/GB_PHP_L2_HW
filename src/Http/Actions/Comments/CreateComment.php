@@ -42,7 +42,7 @@ readonly class CreateComment implements ActionInterface
         try {
             // Идентифицируем пользователя - автора статьи
             $user = $this->identification->getUserByUsername($request);
-        } catch (UserNotFoundException $e) {
+        } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }
 

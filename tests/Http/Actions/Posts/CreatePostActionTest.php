@@ -96,7 +96,12 @@ class CreatePostActionTest extends TestCase
 
             public function getUserByUsername(Request $request): User
             {
-                return $this->usersRepository->getByUsername($this->username);
+                try {
+                    return $this->usersRepository->getByUsername($this->username);
+                } catch (UserNotFoundException $e) {
+                    // Имитируем поведение JsonBodyUuidIdentification
+                    throw new AuthException($e->getMessage());
+                }
             }
         };
     }
