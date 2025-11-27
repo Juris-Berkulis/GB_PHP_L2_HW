@@ -2,12 +2,15 @@
 
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts;
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\PostNotFoundException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\TokenAuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -18,6 +21,8 @@ readonly class DeletePost implements ActionInterface
 {
 
     public function __construct(
+        // Внедряем контракт аутентификации
+        private TokenAuthenticationInterface  $authentication,
         private PostsRepositoryInterface $postsRepository,
         // Внедряем контракт логгера
         private LoggerInterface          $logger,
@@ -28,15 +33,26 @@ readonly class DeletePost implements ActionInterface
     public function handle(Request $request): Response
     {
         try {
+            // Аутентификация пользователя - автора статьи
+            $user = $this->authentication->getUser($request);
+        } catch (AuthException|UserNotFoundException $e) {
+            return new ErrorResponse($e->getMessage());
+        }
+
+        try {
             $postUuid = new UUID($request->query('uuid'));
         } catch (InvalidArgumentException | HttpException $e) {
             return new ErrorResponse($e->getMessage());
         }
 
         try {
-            $this->postsRepository->get($postUuid);
+            $post = $this->postsRepository->get($postUuid);
         } catch (PostNotFoundException | InvalidArgumentException $e) {
             return new ErrorResponse($e->getMessage());
+        }
+
+        if ($post->getUser()->getHashedPassword() !== $user->getHashedPassword()) {
+            return new ErrorResponse('Нельзя удалять чужую статью');
         }
 
         $this->postsRepository->delete($postUuid);

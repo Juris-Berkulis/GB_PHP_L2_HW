@@ -163,9 +163,15 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 
 **URL:** `http://localhost:80/posts?uuid={uuid}`
 
+**Заголовки:**
+```http
+Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
+```
+
 **Пример:**
 ```http
-DELETE http://localhost:80/posts?uuid=c9ccaec2-88b4-41cd-b092-9d64ce9d478a
+DELETE http://localhost:80/posts?uuid=e5a62401-b1f6-4bde-a79e-789e29051f41
+Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
 ```
 
 ### Создание комментария
