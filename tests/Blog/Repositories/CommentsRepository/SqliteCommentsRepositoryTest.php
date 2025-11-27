@@ -39,6 +39,7 @@ class SqliteCommentsRepositoryTest extends TestCase
                     new UUID('123e4567-e89b-12d3-a456-426614174000'),
                     new Name('Ivan', 'Petrov'),
                     'Ivan123',
+                    'some_password',
                 );
             }
 
@@ -68,6 +69,7 @@ class SqliteCommentsRepositoryTest extends TestCase
                         new UUID('123e4567-e89b-12d3-a456-426614174000'),
                         new Name('Ivan', 'Petrov'),
                         'Ivan123',
+                        'some_password',
                     ),
                     'Заголовок',
                     'Тект комментария'
@@ -130,6 +132,7 @@ class SqliteCommentsRepositoryTest extends TestCase
                     new UUID('123e4567-e89b-12d3-a456-426614174000'),
                     new Name('Ivan', 'Petrov'),
                     'ivan123',
+                    'some_password',
                 ),
                 new Post(
                     new UUID('123e4567-e89b-12d3-a456-426614174001'),
@@ -137,6 +140,7 @@ class SqliteCommentsRepositoryTest extends TestCase
                         new UUID('123e4567-e89b-12d3-a456-426614174000'),
                         new Name('Ivan', 'Petrov'),
                         'ivan123',
+                        'some_password',
                     ),
                     'Заголовок',
                     'Текст статьи',

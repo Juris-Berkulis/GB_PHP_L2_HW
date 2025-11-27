@@ -9,17 +9,20 @@ class User
     private UUID $uuid;
     private Name $name;
     private string $username;
+    private string $password;
 
     /**
      * @param UUID $uuid
-     * @param Name $username
+     * @param Name $name
      * @param string $login
+     * @param string $password
      */
-    public function __construct(UUID $uuid, Name $username, string $login)
+    public function __construct(UUID $uuid, Name $name, string $login, string $password)
     {
         $this->uuid = $uuid;
-        $this->name = $username;
+        $this->name = $name;
         $this->username = $login;
+        $this->password = $password;
     }
 
     public function __toString(): string
@@ -57,6 +60,14 @@ class User
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
     }
 
 }

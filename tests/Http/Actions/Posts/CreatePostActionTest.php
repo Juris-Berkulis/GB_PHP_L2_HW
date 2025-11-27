@@ -151,6 +151,7 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 
@@ -252,6 +253,7 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 
@@ -305,6 +307,7 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 

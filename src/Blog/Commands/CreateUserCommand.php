@@ -31,14 +31,17 @@ readonly class CreateUserCommand
         $this->logger->info("Начата команда создания пользователя");
 
         $username = $arguments->get('username');
+        $password = $arguments->get('password');
 
         // Проверяем, существует ли пользователь в репозитории
         if ($this->userExists($username)) {
+            $errorMessage = "Пользователь уже существует: $username";
+
             // Логируем сообщение с уровнем WARNING
-            $this->logger->warning("Пользователь уже существует: $username");
+            $this->logger->warning($errorMessage);
 
             // Бросаем исключение, если пользователь уже существует
-            throw new CommandException("Пользователь уже существует: $username");
+            throw new CommandException($errorMessage);
         }
 
         $uuid = UUID::random();
@@ -51,6 +54,7 @@ readonly class CreateUserCommand
                 $arguments->get('last_name'),
             ),
             $username,
+            $password,
         ));
 
         // Логируем информацию о новом пользователе

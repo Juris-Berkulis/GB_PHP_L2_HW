@@ -32,6 +32,11 @@ class DummyUsersRepository implements UsersRepositoryInterface
     {
         // Для теста не важно, что это будет за пользователь,
         // поэтому возвращаем совершенно произвольного
-        return new User(UUID::random(), new Name("first", "last"), "user123");
+        return new User(
+            UUID::random(),
+            new Name("first", "last"),
+            "user123",
+            'some_password',
+        );
     }
 }
