@@ -8,7 +8,6 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\UserNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
-use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use Psr\Log\LoggerInterface;
 
@@ -31,10 +30,6 @@ readonly class CreateUserCommand
         $this->logger->info("Начата команда создания пользователя");
 
         $username = $arguments->get('username');
-        $password = $arguments->get('password');
-
-        // Вычисляем SHA-256-хеш пароля
-        $passwordHash = hash('sha256', $password);
 
         // Проверяем, существует ли пользователь в репозитории
         if ($this->userExists($username)) {
@@ -47,21 +42,22 @@ readonly class CreateUserCommand
             throw new CommandException($errorMessage);
         }
 
-        $uuid = UUID::random();
-
-        // Сохраняем пользователя в репозиторий
-        $this->usersRepository->save(new User(
-            $uuid,
+        // Создаём объект пользователя
+        // Метод createFrom сам создаст UUID и захеширует пароль
+        $user = User::createFrom(
+            $username,
+            $arguments->get('password'),
             new Name(
                 $arguments->get('first_name'),
-                $arguments->get('last_name'),
-            ),
-            $username,
-            $passwordHash,
-        ));
+                $arguments->get('last_name')
+            )
+        );
+
+        // Сохраняем пользователя в репозиторий
+        $this->usersRepository->save($user);
 
         // Логируем информацию о новом пользователе
-        $this->logger->info("Пользователь создан с uuid: $uuid");
+        $this->logger->info('Пользователь создан с uuid' . $user->getUuid());
     }
 
     private function userExists(string $username): bool

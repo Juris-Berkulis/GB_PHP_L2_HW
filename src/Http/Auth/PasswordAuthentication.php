@@ -46,11 +46,9 @@ readonly class PasswordAuthentication implements AuthenticationInterface
             throw new AuthException($e->getMessage());
         }
 
-        // Вычисляем SHA-256-хеш предъявленного пароля
-        $passwordHash = hash('sha256', $password);
-
-        if ($passwordHash !== $user->getPassword()) {
-            // Если пароли не совпадают — бросаем исключение
+        // Проверяем пароль методом пользователя
+        if (!$user->checkPassword($password)) {
+            // Если пароль неверный — бросаем исключение
             throw new AuthException('Неправильный пароль');
         }
 

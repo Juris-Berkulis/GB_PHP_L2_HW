@@ -9,20 +9,20 @@ class User
     private UUID $uuid;
     private Name $name;
     private string $username;
-    private string $password;
+    private string $hashedPassword;
 
     /**
      * @param UUID $uuid
      * @param Name $name
      * @param string $login
-     * @param string $password
+     * @param string $hashedPassword
      */
-    public function __construct(UUID $uuid, Name $name, string $login, string $password)
+    public function __construct(UUID $uuid, Name $name, string $login, string $hashedPassword)
     {
         $this->uuid = $uuid;
         $this->name = $name;
         $this->username = $login;
-        $this->password = $password;
+        $this->hashedPassword = $hashedPassword;
     }
 
     public function __toString(): string
@@ -65,9 +65,57 @@ class User
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getHashedPassword(): string
     {
-        return $this->password;
+        return $this->hashedPassword;
+    }
+
+    /**
+     * Вычислить хеша пароля
+     *
+     * Использует SHA-256
+     *
+     * @param string $password
+     * @return string
+     */
+    private static function hash(string $password): string
+    {
+        return hash('sha256', $password);
+    }
+
+    /**
+     * Проверить предъявленный пароль
+     * @param string $password
+     * @return bool
+     */
+    public function checkPassword(string $password): bool
+    {
+        return $this->hashedPassword === self::hash($password);
+    }
+
+    /**
+     * Создать нового пользователя
+     *
+     * Создаёт UUID новому пользователю и хеширует его пароль
+     *
+     * @param string $username
+     * @param string $password
+     * @param Name $name
+     * @return self
+     * @throws Exceptions\InvalidArgumentException
+     */
+    public static function createFrom(
+        string $username,
+        string $password,
+        Name $name
+    ): self
+    {
+        return new self(
+            UUID::random(),
+            $name,
+            $username,
+            self::hash($password),
+        );
     }
 
 }
