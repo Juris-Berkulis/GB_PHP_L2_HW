@@ -11,7 +11,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Post;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -25,7 +25,7 @@ readonly class CreatePost implements ActionInterface
         // Внедряем репозитории статей и пользователей
         private PostsRepositoryInterface $postsRepository,
         // Внедряем контракт идентификации
-        private IdentificationInterface  $identification,
+        private AuthenticationInterface  $authentication,
         // Внедряем контракт логгера
         private LoggerInterface          $logger,
     ) {
@@ -39,7 +39,7 @@ readonly class CreatePost implements ActionInterface
     {
         try {
             // Идентифицируем пользователя - автора статьи
-            $user = $this->identification->getUserByUsername($request);
+            $user = $this->authentication->getUserByUsername($request);
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }

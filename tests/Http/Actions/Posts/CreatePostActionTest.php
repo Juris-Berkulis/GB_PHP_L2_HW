@@ -13,7 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
@@ -71,15 +71,15 @@ class CreatePostActionTest extends TestCase
         };
     }
 
-    public function identification(
+    public function authentication(
         UsersRepositoryInterface $usersRepository,
         string $username,
-    ): IdentificationInterface
+    ): AuthenticationInterface
     {
         return new readonly class (
             $usersRepository,
             $username,
-        ) implements IdentificationInterface
+        ) implements AuthenticationInterface
         {
 
             public function __construct(
@@ -99,7 +99,7 @@ class CreatePostActionTest extends TestCase
                 try {
                     return $this->usersRepository->getByUsername($this->username);
                 } catch (UserNotFoundException $e) {
-                    // Имитируем поведение JsonBodyUuidIdentification
+                    // Имитируем поведение JsonBodyUuidAuthentication
                     throw new AuthException($e->getMessage());
                 }
             }
@@ -157,11 +157,11 @@ class CreatePostActionTest extends TestCase
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -205,11 +205,11 @@ class CreatePostActionTest extends TestCase
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -259,11 +259,11 @@ class CreatePostActionTest extends TestCase
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -313,11 +313,11 @@ class CreatePostActionTest extends TestCase
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 

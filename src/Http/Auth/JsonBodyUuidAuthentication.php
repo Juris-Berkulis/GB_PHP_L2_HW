@@ -11,7 +11,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 
-readonly class JsonBodyUuidIdentification implements IdentificationInterface
+readonly class JsonBodyUuidAuthentication implements AuthenticationInterface
 {
 
     public function __construct(

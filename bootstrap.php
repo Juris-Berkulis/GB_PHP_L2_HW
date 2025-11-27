@@ -12,8 +12,8 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\SqlitePostsRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\SqliteUsersRepository;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\JsonBodyUuidIdentification;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\JsonBodyUuidAuthentication;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -112,8 +112,8 @@ $container->bind(
 );
 
 $container->bind(
-    IdentificationInterface::class,
-    JsonBodyUuidIdentification::class
+    AuthenticationInterface::class,
+    JsonBodyUuidAuthentication::class
 );
 
 // Возвращаем объект контейнера

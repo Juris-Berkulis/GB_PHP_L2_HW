@@ -12,7 +12,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsReposit
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -24,7 +24,7 @@ readonly class CreateComment implements ActionInterface
 
     public function __construct(
         // Внедряем контракт идентификации
-        private IdentificationInterface     $identification,
+        private AuthenticationInterface     $authentication,
         private PostsRepositoryInterface    $postsRepository,
         private CommentsRepositoryInterface $commentsRepository,
         // Внедряем контракт логгера
@@ -41,7 +41,7 @@ readonly class CreateComment implements ActionInterface
     {
         try {
             // Идентифицируем пользователя - автора статьи
-            $user = $this->identification->getUserByUsername($request);
+            $user = $this->authentication->getUserByUsername($request);
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }

@@ -13,7 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsReposit
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\LikesOfCommentsRepository\LikesOfCommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\AuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\Response;
@@ -25,11 +25,11 @@ readonly class CreateLikeOfComment implements ActionInterface
 
     public function __construct(
         // Внедряем контракт идентификации
-        private IdentificationInterface            $identification,
+        private AuthenticationInterface            $authentication,
         private CommentsRepositoryInterface        $commentsRepository,
         private LikesOfCommentsRepositoryInterface $likesOfCommentsRepository,
         // Внедряем контракт логгера
-        private LoggerInterface          $logger,
+        private LoggerInterface                    $logger,
     )
     {
     }
@@ -42,7 +42,7 @@ readonly class CreateLikeOfComment implements ActionInterface
     {
         try {
             // Идентифицируем пользователя - автора статьи
-            $user = $this->identification->getUserByUsername($request);
+            $user = $this->authentication->getUserByUsername($request);
         } catch (AuthException $e) {
             return new ErrorResponse($e->getMessage());
         }

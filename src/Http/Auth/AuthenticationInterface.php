@@ -9,7 +9,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\Request;
 /**
  * Контракт получения пользователя из api-запроса
  */
-interface IdentificationInterface
+interface AuthenticationInterface
 {
 
     /**
