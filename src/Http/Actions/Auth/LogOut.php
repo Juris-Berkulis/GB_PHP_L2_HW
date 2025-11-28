@@ -3,8 +3,8 @@
 namespace JurisBerkulis\GbPhpL2Hw\Http\Actions\Auth;
 
 use DateTimeImmutable;
-use JurisBerkulis\GbPhpL2Hw\Blog\AuthToken;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthException;
+use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthTokenNotFoundException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AuthTokensRepositoryException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\ActionInterface;
@@ -37,18 +37,12 @@ readonly class LogOut implements ActionInterface
         }
 
         try {
-            // Аутентификация пользователя, который хочет выйти
-            $user = $this->authentication->getUser($request);
-        } catch (AuthException $e) {
+            $authToken = $this->authTokensRepository->get($token);
+        } catch (AuthTokenNotFoundException|AuthTokensRepositoryException $e) {
             return new ErrorResponse($e->getMessage());
         }
 
-        // Генерируем токен
-        $authToken = new AuthToken(
-            $token,
-            $user->getUuid(),
-            new DateTimeImmutable(),
-        );
+        $authToken->setExpiresOn(new DateTimeImmutable());
 
         // Сохраняем токен в репозиторий
         $this->authTokensRepository->save($authToken);

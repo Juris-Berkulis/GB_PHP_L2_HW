@@ -4,7 +4,7 @@ namespace JurisBerkulis\GbPhpL2Hw\Blog;
 
 use DateTimeImmutable;
 
-readonly class AuthToken
+class AuthToken
 {
 
     /**
@@ -13,8 +13,8 @@ readonly class AuthToken
      * @param DateTimeImmutable $expiresOn Срок годности
      */
     public function __construct(
-        private string            $token,
-        private UUID              $userUuid,
+        private readonly string   $token,
+        private readonly UUID     $userUuid,
         private DateTimeImmutable $expiresOn,
     ) {
     }
@@ -32,6 +32,11 @@ readonly class AuthToken
     public function getExpiresOn(): DateTimeImmutable
     {
         return $this->expiresOn;
+    }
+
+    public function setExpiresOn(DateTimeImmutable $expiresOn): void
+    {
+        $this->expiresOn = $expiresOn;
     }
 
 }
