@@ -89,6 +89,11 @@ class CreatePostActionTest extends TestCase
             {
             }
 
+            public function getToken(Request $request): string
+            {
+                throw new AuthException('');
+            }
+
             public function getUser(Request $request): User
             {
                 try {
