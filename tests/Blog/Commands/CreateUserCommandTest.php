@@ -40,7 +40,10 @@ class CreateUserCommandTest extends TestCase
         $this->expectExceptionMessage('Пользователь уже существует: Ivan');
 
         // Запускаем команду с аргументами
-        $command->handle(new Arguments(['username' => 'Ivan']));
+        $command->handle(new Arguments([
+            'username' => 'Ivan',
+            'password' => 'some_password',
+        ]));
     }
 
     // Функция возвращает объект анонимного класса (в данном случае это стаб),
@@ -82,7 +85,10 @@ class CreateUserCommandTest extends TestCase
 
         $this->expectExceptionMessage('Нет такого аргумента: first_name');
 
-        $command->handle(new Arguments(['username' => 'Ivan']));
+        $command->handle(new Arguments([
+            'username' => 'Ivan',
+            'password' => 'some_password',
+        ]));
     }
 
     /**
@@ -103,6 +109,7 @@ class CreateUserCommandTest extends TestCase
 
         $command->handle(new Arguments([
             'username' => 'Ivan',
+            'password' => 'some_password',
             // Передаём имя пользователя, чтобы дойти до проверки наличия фамилии
             'first_name' => 'Ivan',
         ]));
@@ -156,12 +163,32 @@ class CreateUserCommandTest extends TestCase
         // Запускаем команду
         $command->handle(new Arguments([
             'username' => 'Ivan',
+            'password' => 'some_password',
             'first_name' => 'Ivan',
             'last_name' => 'Nikitin',
         ]));
 
         // Проверяем утверждение относительно мока, а не утверждение относительно команды
         $this->assertTrue($usersRepository->wasCalled());
+    }
+
+    /**
+     * Тест проверяющий, что аргумент password является обязательным
+     * @throws CommandException
+     * @throws InvalidArgumentException
+     */
+    public function testItRequiresPassword(): void
+    {
+        $command = new CreateUserCommand(
+            $this->makeUsersRepository(),
+            new DummyLogger()
+        );
+
+        $this->expectException(ArgumentsException::class);
+        $this->expectExceptionMessage('Нет такого аргумента: password');
+        $command->handle(new Arguments([
+            'username' => 'Ivan',
+        ]));
     }
 
 }

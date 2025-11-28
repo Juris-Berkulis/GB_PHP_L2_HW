@@ -2,6 +2,8 @@
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Auth\LogIn;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Auth\LogOut;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments\CreateLikeOfComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts\CreateLikeOfPost;
@@ -62,16 +64,26 @@ try {
  */
 $routes = [
     'GET' => [
+        // Отображение пользователя по его username
         '/users/show' => FindByUsername::class,
 //        '/posts/show' => FindByUuid::class,
     ],
     'POST' => [
+        // Обмен пароля на токен (аутентификация)
+        '/login' => LogIn::class,
+        // Инвалидировать токен (деаутентификация)
+        '/logout' => LogOut::class,
+        // Создание статьи
         '/posts/create' => CreatePost::class,
+        // Создание комментария
         '/posts/comment' => CreateComment::class,
+        // Добавление лайка к статье
         '/like/post' => CreateLikeOfPost::class,
+        // Добавление лайка к комментарию
         '/like/comment' => CreateLikeOfComment::class,
     ],
     'DELETE' => [
+        // Удаление статьи
         '/posts' => DeletePost::class,
     ],
 ];

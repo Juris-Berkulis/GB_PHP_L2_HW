@@ -13,7 +13,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInt
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
 use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
-use JurisBerkulis\GbPhpL2Hw\Http\Auth\IdentificationInterface;
+use JurisBerkulis\GbPhpL2Hw\Http\Auth\TokenAuthenticationInterface;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
 use JurisBerkulis\GbPhpL2Hw\Http\SuccessfulResponse;
@@ -71,15 +71,15 @@ class CreatePostActionTest extends TestCase
         };
     }
 
-    public function identification(
+    public function authentication(
         UsersRepositoryInterface $usersRepository,
         string $username,
-    ): IdentificationInterface
+    ): TokenAuthenticationInterface
     {
         return new readonly class (
             $usersRepository,
             $username,
-        ) implements IdentificationInterface
+        ) implements TokenAuthenticationInterface
         {
 
             public function __construct(
@@ -89,14 +89,19 @@ class CreatePostActionTest extends TestCase
             {
             }
 
-            public function getUserByUuid(Request $request): User
+            public function getToken(Request $request): string
             {
                 throw new AuthException('');
             }
 
-            public function getUserByUsername(Request $request): User
+            public function getUser(Request $request): User
             {
-                return $this->usersRepository->getByUsername($this->username);
+                try {
+                    return $this->usersRepository->getByUsername($this->username);
+                } catch (UserNotFoundException $e) {
+                    // Имитируем поведение JsonBodyUuidAuthentication
+                    throw new AuthException($e->getMessage());
+                }
             }
         };
     }
@@ -146,16 +151,17 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -199,11 +205,11 @@ class CreatePostActionTest extends TestCase
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -247,16 +253,17 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 
@@ -300,16 +307,17 @@ class CreatePostActionTest extends TestCase
                 new UUID($authorUuid),
                 new Name('Ivan', 'Petrov'),
                 $username,
+                'some_password',
             ),
         ];
 
         $postsRepository = $this->postsRepository();
         $usersRepository = $this->usersRepository($users);
-        $identification = $this->identification($usersRepository, $username);
+        $authentication = $this->authentication($usersRepository, $username);
 
         $action = new CreatePost(
             $postsRepository,
-            $identification,
+            $authentication,
             new DummyLogger(),
         );
 

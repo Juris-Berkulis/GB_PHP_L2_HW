@@ -36,6 +36,7 @@ class SqlitePostsRepositoryTest extends TestCase
                     new UUID('123e4567-e89b-12d3-a456-426614174001'),
                     new Name('Ivan', 'Petrov'),
                     'Ivan123',
+                    'some_password',
                 );
             }
 
@@ -91,6 +92,7 @@ class SqlitePostsRepositoryTest extends TestCase
                     new UUID('123e4567-e89b-12d3-a456-426614174001'),
                     new Name('Ivan', 'Petrov'),
                     'ivan123',
+                    'some_password',
                 ),
                 'Заголовок',
                 'Текст',
