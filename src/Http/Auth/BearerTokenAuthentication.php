@@ -28,7 +28,7 @@ class BearerTokenAuthentication implements TokenAuthenticationInterface
     ) {
     }
 
-    public function getUser(Request $request): User
+    public function getToken(Request $request): string
     {
         try {
             // Получаем HTTP-заголовок
@@ -43,7 +43,12 @@ class BearerTokenAuthentication implements TokenAuthenticationInterface
         }
 
         // Отрезаем префикс Bearer
-        $token = mb_substr($header, strlen(self::HEADER_PREFIX));
+        return mb_substr($header, strlen(self::HEADER_PREFIX));
+    }
+
+    public function getUser(Request $request): User
+    {
+        $token = self::getToken($request);
 
         try {
             // Ищем токен в репозитории

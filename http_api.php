@@ -3,6 +3,7 @@
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\AppException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\HttpException;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Auth\LogIn;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Auth\LogOut;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Comments\CreateComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments\CreateLikeOfComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts\CreateLikeOfPost;
@@ -68,8 +69,10 @@ $routes = [
 //        '/posts/show' => FindByUuid::class,
     ],
     'POST' => [
-        // Обмен пароля на токен
+        // Обмен пароля на токен (аутентификация)
         '/login' => LogIn::class,
+        // Инвалидировать токен (деаутентификация)
+        '/logout' => LogOut::class,
         // Создание статьи
         '/posts/create' => CreatePost::class,
         // Создание комментария

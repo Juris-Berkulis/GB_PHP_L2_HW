@@ -106,6 +106,26 @@ Content-Type: application/json
 }
 ```
 
+### Деаутентификация
+
+**Метод:** POST
+
+**URL:** `http://localhost:80/logout`
+
+**Заголовки:**
+```http
+Content-Type: application/json
+
+Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
+```
+
+**Пример:**
+
+```http
+POST http://localhost:80/logout
+Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
+```
+
 ### Получение пользователя по username
 
 **Метод:** GET
