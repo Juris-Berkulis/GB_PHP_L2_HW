@@ -1,5 +1,6 @@
 <?php
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Users\CreateUser;
 use Symfony\Component\Console\Application;
 
@@ -10,7 +11,10 @@ $application = new Application();
 
 // Перечисляем классы команд
 $commandsClasses = [
+    // Добавить пользователя
     CreateUser::class,
+    // Удалить статью
+    DeletePost::class,
 ];
 
 foreach ($commandsClasses as $commandClass) {
