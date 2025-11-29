@@ -15,6 +15,9 @@ use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\UnitTests\DummyLogger;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Тесты консольной команды создания пользователя
+ */
 class CreateUserCommandTest extends TestCase
 {
 
@@ -46,8 +49,11 @@ class CreateUserCommandTest extends TestCase
         ]));
     }
 
-    // Функция возвращает объект анонимного класса (в данном случае это стаб),
-    // реализующего контракт UsersRepositoryInterface
+    /**
+     * Вернуть объект анонимного класса (в данном случае это стаб),
+     * реализующего контракт UsersRepositoryInterface
+     * @return UsersRepositoryInterface
+     */
     private function makeUsersRepository(): UsersRepositoryInterface
     {
         return new class implements UsersRepositoryInterface {
