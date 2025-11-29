@@ -1,5 +1,6 @@
 <?php
 
+use JurisBerkulis\GbPhpL2Hw\Blog\Commands\FakeData\PopulateDB;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Users\CreateUser;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Users\UpdateUser;
@@ -18,6 +19,8 @@ $commandsClasses = [
     DeletePost::class,
     // Изменить (имя и фамилию) пользователя
     UpdateUser::class,
+    // Генерировать в базе данных фейковые данные (пользователей и статьи)
+    PopulateDB::class,
 ];
 
 foreach ($commandsClasses as $commandClass) {
