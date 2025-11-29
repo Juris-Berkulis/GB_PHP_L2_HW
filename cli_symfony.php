@@ -2,6 +2,7 @@
 
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Posts\DeletePost;
 use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Users\CreateUser;
+use JurisBerkulis\GbPhpL2Hw\Blog\Commands\Users\UpdateUser;
 use Symfony\Component\Console\Application;
 
 $container = require __DIR__ . '/bootstrap.php';
@@ -15,6 +16,8 @@ $commandsClasses = [
     CreateUser::class,
     // Удалить статью
     DeletePost::class,
+    // Изменить (имя и фамилию) пользователя
+    UpdateUser::class,
 ];
 
 foreach ($commandsClasses as $commandClass) {
