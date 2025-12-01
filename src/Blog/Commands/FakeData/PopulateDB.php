@@ -28,7 +28,7 @@ class PopulateDB extends Command
 {
 
     public function __construct(
-        // Внедряем генератор тестовых данных и репозитории пользователей и статей
+        // Внедряем генератор тестовых данных и репозитории пользователей, статей и комментариев
         private readonly Generator                   $faker,
         private readonly UsersRepositoryInterface    $usersRepository,
         private readonly PostsRepositoryInterface    $postsRepository,
