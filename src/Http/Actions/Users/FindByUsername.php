@@ -64,7 +64,7 @@ readonly class FindByUsername implements ActionInterface
 
         $username = $user->getUsername();
 
-        // Логируем UUID новой статьи
+        // Логируем username пользователя
         $this->logger->info("Пользователь найден по username: $username");
 
         // Возвращаем успешный ответ
