@@ -12,6 +12,7 @@ use JurisBerkulis\GbPhpL2Hw\Blog\UUID;
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -37,7 +38,31 @@ class PopulateDB extends Command
     {
         $this
             ->setName('fake-data:populate-db')
-            ->setDescription('Заполняет базу данных фейковыми данными');
+            ->setDescription('Заполняет базу данных фейковыми данными')
+            ->addOption(
+                // Имя опции
+                'users-number',
+                // Сокращённое имя
+                'u',
+                // Значение этой опции является обязательным (сама опция по-прежнему необязательна)
+                InputOption::VALUE_REQUIRED,
+                // Описание
+                'Количество добавляемых пользователей',
+                // Значение по-умолчанию (вместо null), если опция не была передана во время команды
+                10,
+            )
+            ->addOption(
+                // Имя опции
+                'posts-number',
+                // Сокращённое имя
+                'p',
+                // Значение этой опции является обязательным (сама опция по-прежнему необязательна)
+                InputOption::VALUE_REQUIRED,
+                // Описание
+                'Количество добавляемых статей',
+                // Значение по-умолчанию (вместо null), если опция не была передана во время команды
+                20,
+            );
     }
 
     /**
@@ -47,23 +72,43 @@ class PopulateDB extends Command
         InputInterface $input,
         OutputInterface $output,
     ): int {
-        $users = [];
+        // Получаем необходимое количество создаваемых пользователей
+        $usersNumber = (int)$input->getOption('users-number');
+        // Получаем необходимое количество создаваемых статей
+        $postsNumber = (int)$input->getOption('posts-number');
 
-        // Создаём 10 пользователей
-        for ($i = 0; $i < 10; $i++) {
-            $user = $this->createFakeUser();
-            $users[] = $user;
-            $output->writeln('Пользователь создан: ' . $user->getUsername());
+        // Выходим, если количество новых пользователей не является положительным числом
+        if ($usersNumber < 1) {
+            $output->writeln('Количество добавленных пользователей должно быть положительным числом');
+            return Command::FAILURE;
         }
 
-        foreach ($users as $user) {
-            // От имени каждого пользователя создаём по 20 статей
-            for ($i = 0; $i < 20; $i++) {
+        // Выходим, если количество новых статей является отрицательным числом
+        if ($postsNumber < 0) {
+            $output->writeln('Количество добавленный статей должно быть неотрицательным числом');
+            return Command::FAILURE;
+        }
+
+        $users = [];
+
+        // Создаём пользователей
+        for ($i = 1; $i <= $usersNumber; $i++) {
+            $user = $this->createFakeUser();
+            $users[] = $user;
+            $output->writeln("$i. Пользователь создан: " . $user->getUsername());
+        }
+
+        foreach ($users as $i => $user) {
+            $userNumber = $i + 1;
+
+            // От имени каждого пользователя создаём статьи
+            for ($j = 1; $j <= $postsNumber; $j++) {
                 $post = $this->createFakePost($user);
-                $output->writeln('Статья создана: ' . $post->getTitle());
+                $output->writeln("$userNumber-$j. Статья создана: " . $post->getTitle());
             }
         }
 
+        $output->writeln("Новых пользователей: $usersNumber\nНовых статей: " . $usersNumber * $postsNumber. "\n");
         return Command::SUCCESS;
     }
 
