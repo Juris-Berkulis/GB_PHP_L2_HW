@@ -24,7 +24,7 @@ readonly class CreateLikeOfComment implements ActionInterface
 
     public function __construct(
         // Внедряем контракт идентификации
-        private TokenAuthenticationInterface            $authentication,
+        private TokenAuthenticationInterface       $authentication,
         private CommentsRepositoryInterface        $commentsRepository,
         private LikesOfCommentsRepositoryInterface $likesOfCommentsRepository,
         // Внедряем контракт логгера
@@ -80,7 +80,7 @@ readonly class CreateLikeOfComment implements ActionInterface
         $this->logger->info("Лайк к комментарию создан: $newLikeUuid");
 
         return new SuccessfulResponse([
-            'uuid'=>(string)$newLikeUuid,
+            'uuid' => (string)$newLikeUuid,
         ]);
     }
 

@@ -19,8 +19,8 @@ readonly class LogOut implements ActionInterface
 
     public function __construct(
         // Внедряем контракт аутентификации
-        private TokenAuthenticationInterface $authentication,
-        private AuthTokensRepositoryInterface   $authTokensRepository,
+        private TokenAuthenticationInterface  $authentication,
+        private AuthTokensRepositoryInterface $authTokensRepository,
     )
     {
     }

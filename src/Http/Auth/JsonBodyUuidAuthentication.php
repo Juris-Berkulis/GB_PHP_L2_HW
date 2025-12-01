@@ -18,7 +18,8 @@ readonly class JsonBodyUuidAuthentication implements AuthenticationInterface
 
     public function __construct(
         private UsersRepositoryInterface $usersRepository
-    ) {
+    )
+    {
     }
 
     public function getUser(Request $request): User

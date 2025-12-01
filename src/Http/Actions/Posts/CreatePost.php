@@ -22,12 +22,13 @@ readonly class CreatePost implements ActionInterface
 
     public function __construct(
         // Внедряем репозитории статей и пользователей
-        private PostsRepositoryInterface $postsRepository,
+        private PostsRepositoryInterface     $postsRepository,
         // Внедряем контракт аутентификации
-        private TokenAuthenticationInterface  $authentication,
+        private TokenAuthenticationInterface $authentication,
         // Внедряем контракт логгера
-        private LoggerInterface          $logger,
-    ) {
+        private LoggerInterface              $logger,
+    )
+    {
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace JurisBerkulis\GbPhpL2Hw\Blog;
 
 use JurisBerkulis\GbPhpL2Hw\Person\Name;
@@ -111,7 +112,7 @@ class User
     public static function createFrom(
         string $username,
         string $password,
-        Name $name
+        Name   $name
     ): self
     {
         $uuid = UUID::random();

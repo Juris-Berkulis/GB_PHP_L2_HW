@@ -21,9 +21,9 @@ class SqlitePostsRepository implements PostsRepositoryInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        PDO $connection,
+        PDO                      $connection,
         UsersRepositoryInterface $usersRepository,
-        LoggerInterface $logger,
+        LoggerInterface          $logger,
     )
     {
         $this->connection = $connection;

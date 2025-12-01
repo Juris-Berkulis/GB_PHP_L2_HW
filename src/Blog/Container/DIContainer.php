@@ -27,7 +27,7 @@ class DIContainer implements ContainerInterface
      *
      * @return void
      */
-    public function bind(string $id, string | object $resolver): void
+    public function bind(string $id, string|object $resolver): void
     {
         $this->resolvers[$id] = $resolver;
     }

@@ -40,8 +40,7 @@ class CreatePostActionTest extends TestCase
 
     public function usersRepository(array $users): UsersRepositoryInterface
     {
-        return new readonly class($users) implements UsersRepositoryInterface
-        {
+        return new readonly class($users) implements UsersRepositoryInterface {
 
             public function __construct(private array $users)
             {
@@ -73,18 +72,17 @@ class CreatePostActionTest extends TestCase
 
     public function authentication(
         UsersRepositoryInterface $usersRepository,
-        string $username,
+        string                   $username,
     ): TokenAuthenticationInterface
     {
         return new readonly class (
             $usersRepository,
             $username,
-        ) implements TokenAuthenticationInterface
-        {
+        ) implements TokenAuthenticationInterface {
 
             public function __construct(
                 private UsersRepositoryInterface $usersRepository,
-                private string $username,
+                private string                   $username,
             )
             {
             }
@@ -108,8 +106,7 @@ class CreatePostActionTest extends TestCase
 
     public function postsRepository(): PostsRepositoryInterface
     {
-        return new class() implements PostsRepositoryInterface
-        {
+        return new class() implements PostsRepositoryInterface {
 
             public function __construct()
             {

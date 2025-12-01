@@ -33,7 +33,8 @@ class PopulateDB extends Command
         private readonly UsersRepositoryInterface    $usersRepository,
         private readonly PostsRepositoryInterface    $postsRepository,
         private readonly CommentsRepositoryInterface $commentsRepository,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -84,9 +85,10 @@ class PopulateDB extends Command
      * @throws InvalidArgumentException
      */
     protected function execute(
-        InputInterface $input,
+        InputInterface  $input,
         OutputInterface $output,
-    ): int {
+    ): int
+    {
         // Получаем необходимое количество создаваемых пользователей
         $usersNumber = (int)$input->getOption('users-number');
         // Получаем необходимое количество создаваемых статей

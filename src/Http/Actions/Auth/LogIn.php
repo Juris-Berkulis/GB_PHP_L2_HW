@@ -26,7 +26,8 @@ readonly class LogIn implements ActionInterface
     public function __construct(
         private PasswordAuthenticationInterface $passwordAuthentication,
         private AuthTokensRepositoryInterface   $authTokensRepository
-    ) {
+    )
+    {
     }
 
     /**

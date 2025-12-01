@@ -17,7 +17,8 @@ readonly class SqliteAuthTokensRepository implements AuthTokensRepositoryInterfa
 
     public function __construct(
         private PDO $connection
-    ) {
+    )
+    {
     }
 
     public function save(AuthToken $authToken): void
@@ -78,5 +79,5 @@ readonly class SqliteAuthTokensRepository implements AuthTokensRepositoryInterfa
             throw new AuthTokensRepositoryException($e->getMessage(), $e->getCode(), $e);
         }
     }
-    
+
 }

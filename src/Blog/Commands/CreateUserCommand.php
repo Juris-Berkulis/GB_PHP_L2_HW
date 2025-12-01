@@ -16,8 +16,9 @@ readonly class CreateUserCommand
 
     public function __construct(
         private UsersRepositoryInterface $usersRepository,
-        private LoggerInterface $logger,
-    ) {
+        private LoggerInterface          $logger,
+    )
+    {
     }
 
     /**

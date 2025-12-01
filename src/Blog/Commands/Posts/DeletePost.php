@@ -19,7 +19,8 @@ class DeletePost extends Command
     public function __construct(
         // Внедряем репозиторий статей
         private readonly PostsRepositoryInterface $postsRepository,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -54,9 +55,10 @@ class DeletePost extends Command
      * @throws InvalidArgumentException
      */
     protected function execute(
-        InputInterface $input,
+        InputInterface  $input,
         OutputInterface $output,
-    ): int {
+    ): int
+    {
         $question = new ConfirmationQuestion(
             // Вопрос для подтверждения
             'Удалить статью [Y/n]? ',

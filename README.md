@@ -5,14 +5,17 @@
 ## Доступные скрипты
 
 ### 🧪 `test`
+
 **Команда:** `composer test`  
 **Назначение:** Запуск базового набора тестов  
 **Вывод:** Цветной вывод в консоли с названиями тестов  
 **Флаги:**
+
 - `--testdox` - Читаемые названия тестов
 - `--colors=always` - Цветной вывод для лучшей читаемости
 
 ### 📊 `test-mode-coverage`
+
 **Команда:** `composer test-mode-coverage`  
 **Назначение:** Запуск тестов с выводом сводки покрытия в консоль  
 **Вывод:** Текстовая сводка в терминале  
@@ -20,6 +23,7 @@
 **Использование:** Быстрая проверка покрытия во время разработки
 
 ### 🌐 `test-mode-coverage-html`
+
 **Команда:** `composer test-mode-coverage-html`  
 **Назначение:** Генерация детального HTML отчёта о покрытии  
 **Вывод:** Интерактивные HTML файлы в папке `coverage_report/`  
@@ -27,6 +31,7 @@
 **Использование:** Детальный анализ в браузере
 
 ### 📋 `test-mode-coverage-clover`
+
 **Команда:** `composer test-mode-coverage-clover`  
 **Назначение:** Генерация XML отчёта для CI/CD систем  
 **Вывод:** Файл `coverage_report.xml` в формате Clover  
@@ -36,6 +41,7 @@
 ## Примеры использования
 
 ### Рабочий процесс разработки
+
 ```bash
 # Быстрый запуск тестов
 composer test
@@ -76,11 +82,13 @@ php -S localhost:80 http_api.php
 **URL:** `http://localhost:80/login`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 ```
 
 **Тело запроса:**
+
 ```json
 {
   "username": "user",
@@ -113,6 +121,7 @@ Content-Type: application/json
 **URL:** `http://localhost:80/logout`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 
@@ -133,6 +142,7 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 **URL:** `http://localhost:80/users/show?username={username}`
 
 **Пример:**
+
 ```http
 GET http://localhost:80/users/show?username=ivan
 ```
@@ -144,6 +154,7 @@ GET http://localhost:80/users/show?username=ivan
 **URL:** `http://localhost:80/posts/create`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 
@@ -151,10 +162,11 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 ```
 
 **Тело запроса:**
+
 ```json
 {
-    "text": "some text",
-    "title": "some title"
+  "text": "some text",
+  "title": "some title"
 }
 ```
 
@@ -184,11 +196,13 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 **URL:** `http://localhost:80/posts?uuid={uuid}`
 
 **Заголовки:**
+
 ```http
 Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
 ```
 
 **Пример:**
+
 ```http
 DELETE http://localhost:80/posts?uuid=e5a62401-b1f6-4bde-a79e-789e29051f41
 Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d4d4ee3b6a8bb4c51fca4d3
@@ -201,6 +215,7 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 **URL:** `http://localhost:80/posts/comment`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 
@@ -208,10 +223,11 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 ```
 
 **Тело запроса:**
+
 ```json
 {
-    "post_uuid": "6a248a05-d352-4c0b-96e9-4a205a61a6a9",
-    "text": "some text"
+  "post_uuid": "6a248a05-d352-4c0b-96e9-4a205a61a6a9",
+  "text": "some text"
 }
 ```
 
@@ -241,6 +257,7 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 **URL:** `http://localhost:80/like/post`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 
@@ -248,9 +265,10 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 ```
 
 **Тело запроса:**
+
 ```json
 {
-    "post_uuid": "6a248a05-d352-4c0b-96e9-4a205a61a6a9"
+  "post_uuid": "6a248a05-d352-4c0b-96e9-4a205a61a6a9"
 }
 ```
 
@@ -277,6 +295,7 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 **URL:** `http://localhost:80/like/comment`
 
 **Заголовки:**
+
 ```http
 Content-Type: application/json
 
@@ -284,9 +303,10 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 ```
 
 **Тело запроса:**
+
 ```json
 {
-    "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
+  "comment_uuid": "eefb7270-1c8c-49d5-9c69-421584ee61ca"
 }
 ```
 
@@ -315,6 +335,7 @@ Cookie: XDEBUG_SESSION=start
 ```
 
 Пример полного запроса с отладкой:
+
 ```http
 POST http://localhost:80/posts/create
 Content-Type: application/json

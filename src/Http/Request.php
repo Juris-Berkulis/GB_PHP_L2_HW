@@ -23,7 +23,8 @@ readonly class Request
          * Аргумент для хранения тела запроса
          */
         private string $body,
-    ) {
+    )
+    {
     }
 
     /**
@@ -86,7 +87,7 @@ readonly class Request
         // В суперглобальном массиве $_SERVER
         // имена заголовков имеют префикс 'HTTP_',
         // а знаки подчёркивания заменены на минусы
-        $headerName = mb_strtoupper("http_". str_replace('-', '_', $header));
+        $headerName = mb_strtoupper("http_" . str_replace('-', '_', $header));
 
         if (!array_key_exists($headerName, $this->server)) {
             // Если нет такого заголовка - бросаем исключение

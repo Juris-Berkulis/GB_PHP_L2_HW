@@ -24,7 +24,8 @@ readonly class FindByUsername implements ActionInterface
         private UsersRepositoryInterface $usersRepository,
         // Внедряем контракт логгера
         private LoggerInterface          $logger
-    ) {
+    )
+    {
     }
 
     /**

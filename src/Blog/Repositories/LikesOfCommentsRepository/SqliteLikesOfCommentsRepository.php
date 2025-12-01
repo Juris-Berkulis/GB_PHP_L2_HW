@@ -14,7 +14,7 @@ readonly class SqliteLikesOfCommentsRepository implements LikesOfCommentsReposit
 {
 
     public function __construct(
-        private PDO $connection,
+        private PDO             $connection,
         private LoggerInterface $logger,
     )
     {
@@ -86,8 +86,8 @@ readonly class SqliteLikesOfCommentsRepository implements LikesOfCommentsReposit
         );
 
         $statement->execute([
-            ':user_uuid'=>(string)$userUuid,
-            ':comment_uuid'=>(string)$commentUuid,
+            ':user_uuid' => (string)$userUuid,
+            ':comment_uuid' => (string)$commentUuid,
         ]);
 
         $result = $statement->fetch();

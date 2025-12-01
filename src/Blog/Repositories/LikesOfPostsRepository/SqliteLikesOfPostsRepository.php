@@ -14,7 +14,7 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
 {
 
     public function __construct(
-        private PDO $connection,
+        private PDO             $connection,
         private LoggerInterface $logger,
     )
     {
@@ -86,8 +86,8 @@ readonly class SqliteLikesOfPostsRepository implements LikesOfPostsRepositoryInt
         );
 
         $statement->execute([
-            ':user_uuid'=>(string)$userUuid,
-            ':post_uuid'=>(string)$postUuid,
+            ':user_uuid' => (string)$userUuid,
+            ':post_uuid' => (string)$postUuid,
         ]);
 
         $result = $statement->fetch();

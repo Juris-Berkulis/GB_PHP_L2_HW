@@ -10,7 +10,7 @@ class SomeClassDependingOnAnother
 
     public function __construct(
         private SomeClassWithoutDependencies $one,
-        private SomeClassWithParameter $two,
+        private SomeClassWithParameter       $two,
     )
     {
     }

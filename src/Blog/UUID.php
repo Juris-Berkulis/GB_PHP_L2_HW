@@ -11,7 +11,8 @@ readonly class UUID
      * Внутри объекта храним UUID как строку
      * @throws InvalidArgumentException
      */
-    public function __construct(private string $uuidString) {
+    public function __construct(private string $uuidString)
+    {
         // Если входная строка не подходит по формату -
         // бросаем исключение InvalidArgumentException
         // Таким образом, гарантируем, что если объект

@@ -21,10 +21,10 @@ readonly class DeletePost implements ActionInterface
 
     public function __construct(
         // Внедряем контракт аутентификации
-        private TokenAuthenticationInterface  $authentication,
-        private PostsRepositoryInterface $postsRepository,
+        private TokenAuthenticationInterface $authentication,
+        private PostsRepositoryInterface     $postsRepository,
         // Внедряем контракт логгера
-        private LoggerInterface          $logger,
+        private LoggerInterface              $logger,
     )
     {
     }
@@ -40,13 +40,13 @@ readonly class DeletePost implements ActionInterface
 
         try {
             $postUuid = new UUID($request->query('uuid'));
-        } catch (InvalidArgumentException | HttpException $e) {
+        } catch (InvalidArgumentException|HttpException $e) {
             return new ErrorResponse($e->getMessage());
         }
 
         try {
             $post = $this->postsRepository->get($postUuid);
-        } catch (PostNotFoundException | InvalidArgumentException $e) {
+        } catch (PostNotFoundException|InvalidArgumentException $e) {
             return new ErrorResponse($e->getMessage());
         }
 

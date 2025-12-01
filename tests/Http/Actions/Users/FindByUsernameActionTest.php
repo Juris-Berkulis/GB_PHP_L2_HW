@@ -131,7 +131,8 @@ class FindByUsernameActionTest extends TestCase
             // В конструктор анонимного класса передаём массив пользователей
             public function __construct(
                 private array $users
-            ) {
+            )
+            {
             }
 
             public function save(User $user): void

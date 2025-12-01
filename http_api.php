@@ -121,15 +121,17 @@ try {
     // Отправляем ответ
     $response->send();
 } catch (AppException|Exception $e) {
-    switch(true) {
-        case $e instanceof AppException: {
+    switch (true) {
+        case $e instanceof AppException:
+        {
             // Логируем сообщение с уровнем WARNING
             $logger->warning($e->getMessage());
 
             break;
         }
 
-        default: {
+        default:
+        {
             // Логируем сообщение с уровнем ERROR
             $logger->error($e->getMessage(), ['exception' => $e]);
         }

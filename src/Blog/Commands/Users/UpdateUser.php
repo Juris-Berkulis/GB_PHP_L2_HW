@@ -26,7 +26,8 @@ class UpdateUser extends Command
 
     public function __construct(
         private readonly UsersRepositoryInterface $usersRepository,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -62,9 +63,10 @@ class UpdateUser extends Command
      * @throws InvalidArgumentException
      */
     protected function execute(
-        InputInterface $input,
+        InputInterface  $input,
         OutputInterface $output,
-    ): int {
+    ): int
+    {
         // Получаем значения опций
         $firstName = $input->getOption('first-name');
         $lastName = $input->getOption('last-name');

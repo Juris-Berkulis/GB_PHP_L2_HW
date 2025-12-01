@@ -87,7 +87,8 @@ class ArgumentsTest extends TestCase
     public function testItConvertsArgumentsToStrings(
         $inputValue,
         $expectedValue
-    ): void {
+    ): void
+    {
         // Подставляем первое значение из тестового набора
         $arguments = new Arguments(['some_key' => $inputValue]);
         $value = $arguments->get('some_key');

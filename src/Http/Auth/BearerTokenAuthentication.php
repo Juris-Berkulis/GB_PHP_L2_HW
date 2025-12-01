@@ -25,7 +25,8 @@ class BearerTokenAuthentication implements TokenAuthenticationInterface
     public function __construct(
         private readonly AuthTokensRepositoryInterface $authTokensRepository,
         private readonly UsersRepositoryInterface      $usersRepository,
-    ) {
+    )
+    {
     }
 
     public function getToken(Request $request): string

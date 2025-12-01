@@ -18,9 +18,10 @@ class SqliteUsersRepository implements UsersRepositoryInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        PDO $connection,
+        PDO             $connection,
         LoggerInterface $logger,
-    ) {
+    )
+    {
         $this->connection = $connection;
         $this->logger = $logger;
     }

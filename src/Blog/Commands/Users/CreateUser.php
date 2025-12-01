@@ -18,7 +18,8 @@ class CreateUser extends Command
     public function __construct(
         // Внедряем репозиторий пользователей
         private readonly UsersRepositoryInterface $usersRepository,
-    ) {
+    )
+    {
         // Вызываем родительский конструктор
         parent::__construct();
     }
@@ -63,7 +64,7 @@ class CreateUser extends Command
      * @throws InvalidArgumentException
      */
     protected function execute(
-        InputInterface $input,
+        InputInterface  $input,
         OutputInterface $output,
     ): int
     {

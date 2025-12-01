@@ -23,11 +23,11 @@ readonly class CreateComment implements ActionInterface
 
     public function __construct(
         // Внедряем контракт идентификации
-        private TokenAuthenticationInterface     $authentication,
-        private PostsRepositoryInterface    $postsRepository,
-        private CommentsRepositoryInterface $commentsRepository,
+        private TokenAuthenticationInterface $authentication,
+        private PostsRepositoryInterface     $postsRepository,
+        private CommentsRepositoryInterface  $commentsRepository,
         // Внедряем контракт логгера
-        private LoggerInterface             $logger,
+        private LoggerInterface              $logger,
     )
     {
     }
@@ -53,7 +53,7 @@ readonly class CreateComment implements ActionInterface
 
         try {
             $post = $this->postsRepository->get($postUuid);
-        }catch (PostNotFoundException|InvalidArgumentException $e) {
+        } catch (PostNotFoundException|InvalidArgumentException $e) {
             return new ErrorResponse($e->getMessage());
         }
 

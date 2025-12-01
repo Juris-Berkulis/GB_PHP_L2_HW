@@ -16,7 +16,8 @@ class AuthToken
         private readonly string   $token,
         private readonly UUID     $userUuid,
         private DateTimeImmutable $expiresOn,
-    ) {
+    )
+    {
     }
 
     public function getToken(): string

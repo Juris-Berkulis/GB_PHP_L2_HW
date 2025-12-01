@@ -14,7 +14,8 @@ readonly class PasswordAuthentication implements PasswordAuthenticationInterface
 
     public function __construct(
         private UsersRepositoryInterface $usersRepository
-    ) {
+    )
+    {
     }
 
     public function getUser(Request $request): User

@@ -16,7 +16,8 @@ class ErrorResponse extends Response
      */
     public function __construct(
         private readonly string $reason = 'Что-то пошло не так'
-    ) {
+    )
+    {
     }
 
     /**

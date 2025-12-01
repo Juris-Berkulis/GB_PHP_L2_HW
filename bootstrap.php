@@ -84,7 +84,7 @@ $logger = (new Logger('blog'));
 // содержит значение 'yes'
 if ('yes' === $_SERVER['LOG_TO_FILES']) {
     $logger
-         // Настраиваем логгер
+        // Настраиваем логгер
         ->pushHandler(new StreamHandler(
             // записывать в файл '/logs/blog.log'
             __DIR__ . '/logs/blog.log'

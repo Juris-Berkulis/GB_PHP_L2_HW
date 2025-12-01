@@ -24,10 +24,10 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
     private LoggerInterface $logger;
 
     public function __construct(
-        PDO $connection,
+        PDO                      $connection,
         PostsRepositoryInterface $postsRepository,
         UsersRepositoryInterface $usersRepository,
-        LoggerInterface $logger,
+        LoggerInterface          $logger,
     )
     {
         $this->connection = $connection;
