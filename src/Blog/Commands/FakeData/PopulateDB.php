@@ -3,8 +3,10 @@
 namespace JurisBerkulis\GbPhpL2Hw\Blog\Commands\FakeData;
 
 use Faker\Generator;
+use JurisBerkulis\GbPhpL2Hw\Blog\Comment;
 use JurisBerkulis\GbPhpL2Hw\Blog\Exceptions\InvalidArgumentException;
 use JurisBerkulis\GbPhpL2Hw\Blog\Post;
+use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\CommentsRepository\CommentsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\PostsRepository\PostsRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\UsersRepository\UsersRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\User;
@@ -27,9 +29,10 @@ class PopulateDB extends Command
 
     public function __construct(
         // Внедряем генератор тестовых данных и репозитории пользователей и статей
-        private readonly Generator                $faker,
-        private readonly UsersRepositoryInterface $usersRepository,
-        private readonly PostsRepositoryInterface $postsRepository,
+        private readonly Generator                   $faker,
+        private readonly UsersRepositoryInterface    $usersRepository,
+        private readonly PostsRepositoryInterface    $postsRepository,
+        private readonly CommentsRepositoryInterface $commentsRepository,
     ) {
         parent::__construct();
     }
@@ -62,6 +65,18 @@ class PopulateDB extends Command
                 'Количество добавляемых статей',
                 // Значение по-умолчанию (вместо null), если опция не была передана во время команды
                 20,
+            )
+            ->addOption(
+                // Имя опции
+                'comments-number',
+                // Сокращённое имя
+                'c',
+                // Значение этой опции является обязательным (сама опция по-прежнему необязательна)
+                InputOption::VALUE_REQUIRED,
+                // Описание
+                'Количество добавляемых комментариев',
+                // Значение по-умолчанию (вместо null), если опция не была передана во время команды
+                3,
             );
     }
 
@@ -76,16 +91,24 @@ class PopulateDB extends Command
         $usersNumber = (int)$input->getOption('users-number');
         // Получаем необходимое количество создаваемых статей
         $postsNumber = (int)$input->getOption('posts-number');
+        // Получаем необходимое количество создаваемых статей
+        $commentsNumber = (int)$input->getOption('comments-number');
 
         // Выходим, если количество новых пользователей не является положительным числом
         if ($usersNumber < 1) {
-            $output->writeln('Количество добавленных пользователей должно быть положительным числом');
+            $output->writeln('Количество добавляемых пользователей должно быть положительным числом');
             return Command::FAILURE;
         }
 
         // Выходим, если количество новых статей является отрицательным числом
         if ($postsNumber < 0) {
-            $output->writeln('Количество добавленный статей должно быть неотрицательным числом');
+            $output->writeln('Количество добавляемых статей должно быть неотрицательным числом');
+            return Command::FAILURE;
+        }
+
+        // Выходим, если количество новых комментариев является отрицательным числом
+        if ($commentsNumber < 0) {
+            $output->writeln('Количество добавляемых комментариев должно быть неотрицательным числом');
             return Command::FAILURE;
         }
 
@@ -98,17 +121,36 @@ class PopulateDB extends Command
             $output->writeln("$i. Пользователь создан: " . $user->getUsername());
         }
 
+        $posts = [];
+
         foreach ($users as $i => $user) {
             $userNumber = $i + 1;
 
             // От имени каждого пользователя создаём статьи
             for ($j = 1; $j <= $postsNumber; $j++) {
                 $post = $this->createFakePost($user);
+                $posts[] = $post;
                 $output->writeln("$userNumber-$j. Статья создана: " . $post->getTitle());
             }
         }
 
-        $output->writeln("Новых пользователей: $usersNumber\nНовых статей: " . $usersNumber * $postsNumber. "\n");
+        foreach ($posts as $i => $post) {
+            $postNumber = $i + 1;
+
+            // Для каждой статьи создаём комментарии
+            for ($j = 1; $j <= $commentsNumber; $j++) {
+                // Авторы комментариев - случайные ранее созданные пользователи
+                $author = $users[mt_rand(0, $usersNumber - 1)];
+
+                $comment = $this->createFakeComment($author, $post);
+                $output->writeln("$postNumber-$j. Комментарий создан: " . $comment->getText());
+            }
+        }
+
+        $output->writeln("Новых пользователей: $usersNumber");
+        $output->writeln("Новых статей: " . $usersNumber * $postsNumber);
+        $output->writeln("Новых комментариев: " . $usersNumber * $postsNumber * $commentsNumber);
+
         return Command::SUCCESS;
     }
 
@@ -156,6 +198,24 @@ class PopulateDB extends Command
         $this->postsRepository->save($post);
 
         return $post;
+    }
+
+    /**
+     * Создать фейковый комментарий
+     * @throws InvalidArgumentException
+     */
+    private function createFakeComment(User $author, Post $post): Comment
+    {
+        $comment = new Comment(
+            UUID::random(),
+            $author,
+            $post,
+            $this->faker->realText,
+        );
+
+        $this->commentsRepository->save($comment);
+
+        return $comment;
     }
 
 }
