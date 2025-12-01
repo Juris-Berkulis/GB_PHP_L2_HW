@@ -9,6 +9,7 @@ use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfComments\CreateLikeOfComment;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\LikesOfPosts\CreateLikeOfPost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\CreatePost;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\DeletePost;
+use JurisBerkulis\GbPhpL2Hw\Http\Actions\Posts\FindByUuid;
 use JurisBerkulis\GbPhpL2Hw\Http\Actions\Users\FindByUsername;
 use JurisBerkulis\GbPhpL2Hw\Http\ErrorResponse;
 use JurisBerkulis\GbPhpL2Hw\Http\Request;
@@ -66,7 +67,7 @@ $routes = [
     'GET' => [
         // Отображение пользователя по его username
         '/users/show' => FindByUsername::class,
-//        '/posts/show' => FindByUuid::class,
+        '/posts/show' => FindByUuid::class,
     ],
     'POST' => [
         // Обмен пароля на токен (аутентификация)

@@ -147,6 +147,18 @@ Authorization: Bearer 0f36a75f28e2811b4a5d8d15f8ac1b61f7e4edbe4b4135cf6f71fa784d
 GET http://localhost:80/users/show?username=ivan
 ```
 
+### Получение статьи по uuid
+
+**Метод:** GET
+
+**URL:** `http://localhost:80/posts/show?uuid={uuid}`
+
+**Пример:**
+
+```http
+GET http://localhost:80/posts/show?uuid=2c48c732-350c-46b0-9127-48c0e5a253f5
+```
+
 ### Создание статьи
 
 **Метод:** POST
