@@ -1,6 +1,11 @@
 <?php
 
 use Dotenv\Dotenv;
+use Faker\Generator;
+use Faker\Provider\Lorem;
+use Faker\Provider\ru_RU\Internet;
+use Faker\Provider\ru_RU\Person;
+use Faker\Provider\ru_RU\Text;
 use JurisBerkulis\GbPhpL2Hw\Blog\Container\DIContainer;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\AuthTokensRepositoryInterface;
 use JurisBerkulis\GbPhpL2Hw\Blog\Repositories\AuthTokensRepository\SqliteAuthTokensRepository;
@@ -128,6 +133,21 @@ $container->bind(
 $container->bind(
     AuthTokensRepositoryInterface::class,
     SqliteAuthTokensRepository::class
+);
+
+// Создаём объект генератора тестовых данных
+$faker = new Generator();
+
+// Инициализируем необходимые нам виды данных
+$faker->addProvider(new Person($faker));
+$faker->addProvider(new Text($faker));
+$faker->addProvider(new Internet($faker));
+$faker->addProvider(new Lorem($faker));
+
+// Добавляем генератор тестовых данных в контейнер внедрения зависимостей
+$container->bind(
+    Generator::class,
+    $faker
 );
 
 // Возвращаем объект контейнера

@@ -27,7 +27,7 @@ readonly class CreateUserCommand
     public function handle(Arguments $arguments): void
     {
         // Логируем информацию о том, что команда запущена (Уровень логирования – INFO)
-        $this->logger->info("Начата команда создания пользователя");
+        $this->logger->info('Начата команда создания пользователя');
 
         $username = $arguments->get('username');
 
@@ -60,6 +60,11 @@ readonly class CreateUserCommand
         $this->logger->info('Пользователь создан с uuid' . $user->getUuid());
     }
 
+    /**
+     * Проверить, существует ли пользователь
+     * @param string $username
+     * @return bool
+     */
     private function userExists(string $username): bool
     {
         try {
